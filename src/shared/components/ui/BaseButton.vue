@@ -19,7 +19,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <Button :variant="variant" :size="size" :disable="disabled || loading" :class="cn(props.class)">
+  <Button :variant="variant" :size="size" :disabled="disabled || loading" :class="cn(props.class)">
     <Loader2Icon v-if="loading" class="animate-spin" />
 
     <component :is="prefixIcon" v-else-if="prefixIcon" />
