@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
 import BaseButton from '@/shared/components/ui/BaseButton.vue';
+import BaseDivider from '@/shared/components/ui/BaseDivider.vue';
 import { Plus } from '@lucide/vue';
+import { useGetMountains } from '../actions/mountain.action';
+
+const { data } = useGetMountains();
 </script>
 
 <template>
@@ -21,18 +25,30 @@ import { Plus } from '@lucide/vue';
       />
     </section>
 
-    <div class="border w-full p-4 rounded-lg flex items-center justify-between mt-5">
-      <div class="flex flex-col gap-y-1">
-        <h6 class="font-bold text-sm">Fuya Fuya</h6>
-        <div class="flex flex-row items-center gap-x-2">
-          <BaseBadge class="bg-primary/10 text-primary text-[0.68rem] font-bold" label="5126 mts" />
-          <p class="text-xs text-muted-foreground font-medium">Location</p>
-        </div>
-      </div>
+    <div class="border w-full rounded-lg flex flex-col mt-5">
+      <div v-for="(item, index) in data" :key="index" class="w-full">
+        <div class="p-4 flex items-center justify-between">
+          <div class="flex flex-col gap-y-1">
+            <h6 class="font-bold text-sm">{{ item.name }}</h6>
+            <div class="flex flex-row items-center gap-x-2">
+              <BaseBadge
+                class="bg-primary/10 text-primary text-[0.68rem] font-bold"
+                :label="`${item.altitudeMeters} mts`"
+              />
+              <p class="text-xs text-muted-foreground">{{ item.location }}</p>
+            </div>
+          </div>
 
-      <div class="flex items-center gap-x-2.5">
-        <BaseBadge class="bg-success/10 text-success text-[0.68rem] font-bold" label="Activa" />
-        <BaseButton class="text-[0.8rem] border bg-background" variant="secondary" label="Editar" />
+          <div class="flex items-center gap-x-2.5">
+            <BaseBadge class="bg-success/10 text-success text-[0.68rem] font-bold" label="Activa" />
+            <BaseButton
+              class="text-[0.8rem] border bg-background"
+              variant="secondary"
+              label="Editar"
+            />
+          </div>
+        </div>
+        <BaseDivider v-if="index !== (data?.length ?? 0) - 1" />
       </div>
     </div>
   </section>
