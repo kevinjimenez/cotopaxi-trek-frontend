@@ -34,7 +34,7 @@ const goTo = (name: string) => {
           @click="() => goTo('user')"
         />
       </div>
-      <h6 class="text-muted-foreground text-sm">Company</h6>
+      <h6 class="text-muted-foreground text-sm font-medium">Company</h6>
     </div>
     <router-view />
   </main>
