@@ -12,6 +12,7 @@ interface Props {
   disabled?: boolean;
   prefixIcon?: LucideIcon;
   suffixIcon?: LucideIcon;
+  iconClass?: HTMLAttributes['class'];
   class?: HTMLAttributes['class'];
 }
 
@@ -22,10 +23,10 @@ const props = defineProps<Props>();
   <Button :variant="variant" :size="size" :disabled="disabled || loading" :class="cn(props.class)">
     <Loader2Icon v-if="loading" class="animate-spin" />
 
-    <component :is="prefixIcon" v-else-if="prefixIcon" />
+    <component :is="prefixIcon" v-else-if="prefixIcon" :class="iconClass" />
 
     {{ label }}
 
-    <component :is="suffixIcon" v-if="suffixIcon && !loading" />
+    <component :is="suffixIcon" v-if="suffixIcon && !loading" :class="iconClass" />
   </Button>
 </template>
