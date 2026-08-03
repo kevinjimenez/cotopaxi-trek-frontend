@@ -10,6 +10,11 @@ Esta plantilla te ayuda a empezar a desarrollar con Vue 3 en Vite.
 - [Lucide](https://lucide.dev/) (`@lucide/vue`) — librería de íconos.
 - [tw-animate-css](https://github.com/Wombosvideo/tw-animate-css) — utilidades de animación para Tailwind.
 
+## Librerías de datos
+
+- [Axios](https://axios-http.com/) — cliente HTTP para consumir la API del backend.
+- [TanStack Query](https://tanstack.com/query) (`@tanstack/vue-query`) — manejo de estado del servidor: cache, refetch, loading/error states sobre las llamadas a la API.
+
 ## Estructura de componentes: `src/shadcn` vs `src/shared`
 
 ```
