@@ -15,8 +15,8 @@
   "pointer": false,
   "aliases": {
     "components": "@/shared/components",
-    "utils": "@/lib/utils",
-    "ui": "@/shared/components/shadcn",
+    "utils": "@/shadcn/utils",
+    "ui": "@/shadcn",
     "lib": "@/lib",
     "composables": "@/composables"
   },
