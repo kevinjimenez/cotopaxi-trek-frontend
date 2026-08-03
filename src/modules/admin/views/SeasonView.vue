@@ -9,8 +9,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/shadcn/ui/accordion';
+import { formatDate, fromNow } from '@/shared/utils/date.utils';
 
 const { data } = useGetSeasonsWithMountains();
+
+// const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-CA');
 </script>
 
 <template>
@@ -40,12 +43,8 @@ const { data } = useGetSeasonsWithMountains();
             <div class="flex flex-col gap-y-1">
               <h6 class="font-bold text-sm">{{ item.name }}</h6>
               <div class="flex flex-row items-center gap-x-2">
-                <!-- <BaseBadge
-                  class="bg-primary/10 text-primary text-[0.68rem] font-bold"
-                  :label="`${item.altitudeMeters} mts`"
-                /> -->
                 <p class="text-xs text-muted-foreground">
-                  {{ item.startDate }} - {{ item.endDate }}
+                  {{ formatDate(item.startDate) }} - {{ formatDate(item.endDate) }}
                 </p>
                 <p class="text-xs text-muted-foreground">
                   {{ item.seasonMountains.length }} Montañas
@@ -55,6 +54,15 @@ const { data } = useGetSeasonsWithMountains();
 
             <div class="flex items-center gap-x-2.5">
               <BaseBadge
+                :class="[
+                  'text-[0.68rem] font-semibold',
+                  fromNow(item.endDate).isAfter
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-muted-foreground/10 text-muted-foreground',
+                ]"
+                :label="fromNow(item.endDate).label"
+              />
+              <BaseBadge
                 class="bg-success/10 text-success text-[0.68rem] font-bold"
                 label="Activa"
               />
@@ -62,6 +70,7 @@ const { data } = useGetSeasonsWithMountains();
                 class="text-[0.8rem] border bg-background"
                 variant="secondary"
                 label="Editar"
+                @click.stop
               />
             </div>
           </div>
