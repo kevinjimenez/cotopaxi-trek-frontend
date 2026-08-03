@@ -4,7 +4,9 @@ import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 
 import { VueQueryPlugin } from '@tanstack/vue-query';
+import 'dayjs/locale/es';
 import App from './App.vue';
+import './config/env';
 import router from './router';
 
 const pinia = createPinia();
