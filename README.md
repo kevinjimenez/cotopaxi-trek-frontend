@@ -15,26 +15,25 @@ Esta plantilla te ayuda a empezar a desarrollar con Vue 3 en Vite.
 ```
 src/
   shadcn/                    ← generado/gestionado por el CLI de shadcn-vue
-    ui/
+    ui/                      ← primitivos individuales (registry:ui), ej. Button
       button/
         Button.vue
         index.ts
+    components/              ← bloques/composiciones completas (registry:component) que el CLI pueda generar
     utils.ts                 ← cn() (clsx + tailwind-merge)
-    lib/                     ← helpers que algún componente del registry pueda generar
-    composables/             ← composables que algún componente del registry pueda generar (ej. useToast)
+    lib/                     ← helpers (registry:lib) que algún componente del registry pueda generar
+    composables/             ← composables (registry:hook) que algún componente del registry pueda generar (ej. useToast)
   shared/
-    components/
-      ui/
-        BaseButton.vue       ← componentes propios del proyecto
+    ui/
+      BaseButton.vue         ← componentes propios del proyecto
 ```
 
-Los alias `ui`, `utils`, `lib` y `composables` de `components.json` apuntan todos dentro de `src/shadcn/`, así cualquier `npx shadcn-vue add` futuro (sea un componente, un helper o un composable) cae en el lugar correcto automáticamente, sin mezclarse con código propio.
+Los alias `ui`, `components`, `utils`, `lib` y `composables` de `components.json` apuntan **todos** dentro de `src/shadcn/`. Cada uno corresponde a una categoría distinta de lo que el registry de shadcn-vue puede generar (primitivo, bloque, helper, composable), no a "lo que tú creas" — así cualquier `npx shadcn-vue add` futuro cae en el lugar correcto automáticamente, sin mezclarse con código propio.
 
 **Por qué separarlos:** `src/shadcn` es territorio del CLI (`npx shadcn-vue add <componente>`). Si algún día se vuelve a correr ese comando para actualizar un componente, el CLI **sobrescribe el archivo completo** — cualquier cambio manual ahí se pierde. Por eso:
 
 - **No se edita nada dentro de `src/shadcn` a mano.** Es el primitivo "en crudo" tal como lo genera shadcn-vue/Reka UI.
-- Los componentes propios del proyecto (con reglas de negocio, props restringidas, íconos, estados de `loading`, etc.) van en `src/shared/components/ui/`, como wrappers que consumen los primitivos de `src/shadcn` por dentro. Ejemplo: `BaseButton.vue` envuelve `shadcn/button` agregando `label`, `loading`, `prefixIcon`/`suffixIcon`.
-- El alias `ui` de `components.json` apunta a `@/shadcn`, así que cualquier `npx shadcn-vue add` futuro escribe automáticamente en el lugar correcto sin fricción.
+- Los componentes propios del proyecto (con reglas de negocio, props restringidas, íconos, estados de `loading`, etc.) van en `src/shared/ui/`, como wrappers que consumen los primitivos de `src/shadcn/ui` por dentro. Ejemplo: `BaseButton.vue` envuelve `shadcn/ui/button` agregando `label`, `loading`, `prefixIcon`/`suffixIcon`.
 
 **Buena práctica al crear un wrapper (`Base*`):**
 - Definir las props explícitas que se permiten (no usar `v-bind="$attrs"` abierto) — así el componente controla qué se puede configurar desde afuera en vez de exponer toda la API del primitivo.

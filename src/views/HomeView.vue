@@ -22,6 +22,6 @@
   <BaseButton label="Click me size:lg" :suffix-icon="Home" size="lg" variant="outline" />
 </template>
 <script setup lang="ts">
-import BaseButton from '@/shared/components/ui/BaseButton.vue';
+import BaseButton from '@/shared/ui/BaseButton.vue';
 import { Home } from '@lucide/vue';
 </script>
