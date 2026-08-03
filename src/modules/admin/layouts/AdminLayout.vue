@@ -12,8 +12,13 @@ const goTo = (name: string) => {
 </script>
 
 <template>
-  <main class="bg-amber-400 min-h-screen h-auto">
-    <div class="bg-background w-full flex px-10 py-2 items-center justify-between">
+  <main class="min-h-screen h-auto">
+    <div class="bg-background w-full flex px-10 py-4 items-center justify-between border border-y">
+      <h5 class="text-lg font-bold">Panel Admin</h5>
+
+      <h6 class="text-muted-foreground text-sm font-medium">Admin</h6>
+    </div>
+    <div class="bg-background w-full flex px-10 py-2 items-center justify-between border border-b">
       <div class="flex">
         <BaseButton
           class="text-foreground underline-offset-12 decoration-primary hover:underline hover:decoration-2"
