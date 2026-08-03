@@ -1,53 +1,72 @@
 # cotopaxi-trek-frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Esta plantilla te ayuda a empezar a desarrollar con Vue 3 en Vite.
 
-## Recommended IDE Setup
+## Librerías de UI utilizadas
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- [Tailwind CSS v4](https://tailwindcss.com/) — utilidades CSS.
+- [shadcn-vue](https://www.shadcn-vue.com/) — componentes base (Button, etc.), generados dentro del proyecto en `src/components/ui`.
+- [Reka UI](https://reka-ui.com/) — primitivos headless (accesibilidad, foco, teclado) sobre los que se construye shadcn-vue.
+- [Lucide](https://lucide.dev/) (`@lucide/vue`) — librería de íconos.
+- [tw-animate-css](https://github.com/Wombosvideo/tw-animate-css) — utilidades de animación para Tailwind.
 
-## Recommended Browser Setup
+## Configuración recomendada del editor
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
+[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (y deshabilitar Vetur).
+
+### Snippets de Vue
+
+Si usas [Zed](https://zed.dev/), instala la extensión [Vue snippets](https://zed.dev/extensions/vue-snippets) ([repo](https://github.com/rubjo/zed-vue-snippets)) para tener snippets de Vue 3 (Composition API, `<script setup>`, Vue Router, etc.). Algunos de los más útiles:
+
+- `vbase` → SFC base con `<script setup>` + TypeScript
+- `vdefineprops`, `vdefineemits`, `vdefinemodel` → macros de `<script setup>`
+- `vref`, `vref-typed`, `vreactive`, `vcomputed` → estado reactivo
+- `vonmounted`, `vonupdated`, `vonunmounted` → lifecycle hooks
+- `vfor`, `vmodel`, `von`, `vslot-named` → directivas y slots de template
+- `vrlink`, `vrlink-param` → Vue Router
+
+## Configuración recomendada del navegador
+
+- Navegadores basados en Chromium (Chrome, Edge, Brave, etc.):
   - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
+  - [Activar Custom Object Formatter en Chrome DevTools](http://bit.ly/object-formatters)
 - Firefox:
   - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+  - [Activar Custom Object Formatter en Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
 
-## Type Support for `.vue` Imports in TS
+## Soporte de tipos para imports de `.vue` en TS
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+TypeScript no puede manejar la información de tipos de los imports `.vue` por defecto, por eso reemplazamos el CLI `tsc` por `vue-tsc` para el type-checking. En el editor necesitamos [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) para que el servicio de lenguaje de TypeScript entienda los tipos de `.vue`.
 
-## Customize configuration
+## Personalizar configuración
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Ver [Vite Configuration Reference](https://vite.dev/config/).
 
-## Project Setup
+## Configuración del proyecto
 
 ```sh
 bun install
 ```
 
-### Compile and Hot-Reload for Development
+### Compilar y recargar en caliente para desarrollo
 
 ```sh
 bun dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Verificar tipos, compilar y minificar para producción
 
 ```sh
 bun run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### Correr pruebas unitarias con [Vitest](https://vitest.dev/)
 
 ```sh
 bun test:unit
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Lint con [ESLint](https://eslint.org/)
 
 ```sh
 bun lint
