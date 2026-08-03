@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, type ButtonVariants } from '@/components/ui/button';
+import { Button, type ButtonVariants } from '@/shared/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Loader2Icon, type LucideIcon } from '@lucide/vue';
 import type { HTMLAttributes } from 'vue';
