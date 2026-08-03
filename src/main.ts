@@ -1,14 +1,26 @@
-import './assets/main.css'
+import './assets/main.css';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createPinia } from 'pinia';
+import { createApp } from 'vue';
 
-import App from './App.vue'
-import router from './router'
+import { VueQueryPlugin } from '@tanstack/vue-query';
+import App from './App.vue';
+import router from './router';
 
-const app = createApp(App)
+const pinia = createPinia();
+const app = createApp(App);
 
-app.use(createPinia())
-app.use(router)
+app.use(pinia);
+app.use(router);
+app.use(VueQueryPlugin, {
+  queryClientConfig: {
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000, // 1 minuto por defecto, overrideable por query
+        retry: 3,
+      },
+    },
+  },
+});
 
-app.mount('#app')
+app.mount('#app');
