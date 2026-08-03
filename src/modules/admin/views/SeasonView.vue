@@ -1,6 +1,19 @@
 <script setup lang="ts">
 import BaseButton from '@/shared/components/ui/BaseButton.vue';
-import { Plus } from '@lucide/vue';
+import { ChevronRight, Plus } from '@lucide/vue';
+import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
+import { useGetSeasonsWithMountains } from '../actions/season.action';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/shadcn/ui/accordion';
+import { formatDate, fromNow } from '@/shared/utils/date.utils';
+
+const { data } = useGetSeasonsWithMountains();
+
+// const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-CA');
 </script>
 
 <template>
@@ -17,5 +30,53 @@ import { Plus } from '@lucide/vue';
         icon-class="size-2.5"
       />
     </section>
+
+    <Accordion type="single" collapsible class="w-full border rounded-lg mt-5">
+      <AccordionItem v-for="item in data" :key="item.id" :value="`item-${item.id}`" class="">
+        <AccordionTrigger
+          class="hover:no-underline items-center justify-center p-4 flex flex-row-reverse [&[data-state=open]>svg]:rotate-90"
+        >
+          <template #icon>
+            <ChevronRight class="text-muted-foreground size-4 transition-transform duration-200" />
+          </template>
+          <div class="flex items-center justify-between w-full">
+            <div class="flex flex-col gap-y-1">
+              <h6 class="font-bold text-sm">{{ item.name }}</h6>
+              <div class="flex flex-row items-center gap-x-2">
+                <p class="text-xs text-muted-foreground">
+                  {{ formatDate(item.startDate) }} - {{ formatDate(item.endDate) }}
+                </p>
+                <p class="text-xs text-muted-foreground">
+                  {{ item.seasonMountains.length }} Montañas
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-x-2.5">
+              <BaseBadge
+                :class="[
+                  'text-[0.68rem] font-semibold',
+                  fromNow(item.endDate).isAfter
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-muted-foreground/10 text-muted-foreground',
+                ]"
+                :label="fromNow(item.endDate).label"
+              />
+              <BaseBadge
+                class="bg-success/10 text-success text-[0.68rem] font-bold"
+                label="Activa"
+              />
+              <BaseButton
+                class="text-[0.8rem] border bg-background"
+                variant="secondary"
+                label="Editar"
+                @click.stop
+              />
+            </div>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent> {{ item.id }}</AccordionContent>
+      </AccordionItem>
+    </Accordion>
   </section>
 </template>

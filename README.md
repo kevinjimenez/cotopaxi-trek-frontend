@@ -45,6 +45,21 @@ Los alias `ui`, `components`, `utils`, `lib` y `composables` de `components.json
 - Reusar los tipos del primitivo (`ButtonVariants['variant']`, etc.) en vez de redefinir uniones de strings a mano, para que se mantengan sincronizados si el primitivo cambia.
 - Declarar `class` como prop tipada (`HTMLAttributes['class']`) y mezclarla con `cn()` en vez de dejar que Tailwind pise clases por defecto sin resolver conflictos.
 
+**Reemplazar el ícono de un primitivo sin editarlo:** varios primitivos de `src/shadcn` (ej. `AccordionTrigger`) exponen un slot con nombre `icon` con un ícono por defecto. Para cambiarlo, se sobreescribe el slot desde el consumidor en vez de tocar el archivo del primitivo:
+
+```vue
+<AccordionTrigger class="[&[data-state=open]>svg]:rotate-90">
+  <template #icon>
+    <ChevronRight class="text-muted-foreground pointer-events-none size-4 shrink-0 transition-transform duration-200" />
+  </template>
+  ...
+</AccordionTrigger>
+```
+
+Dos cosas a tener en cuenta:
+- El ícono por defecto (`ChevronDown`) gira 180° al abrir (`[&[data-state=open]>svg]:rotate-180`, definido en el `class` base del primitivo). Si tu ícono de reemplazo espera otra rotación (ej. `ChevronRight` → `v` con solo 90°), hay que pasar esa misma clase con el ángulo nuevo por `class` en el consumidor — `cn()`/tailwind-merge la resuelve porque comparten el mismo prefijo de variante (`[&[data-state=open]>svg]:`), así que la del consumidor gana sobre la del primitivo.
+- El ícono que pongas en el slot sigue siendo hijo directo del trigger (por eso el selector `>svg` de arriba lo sigue alcanzando), así que no hace falta duplicar `transition-transform`/`size-4` salvo que quieras un tamaño distinto.
+
 ## Configuración recomendada del editor
 
 [VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (y deshabilitar Vetur).
