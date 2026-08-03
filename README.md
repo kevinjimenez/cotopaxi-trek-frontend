@@ -5,10 +5,36 @@ Esta plantilla te ayuda a empezar a desarrollar con Vue 3 en Vite.
 ## Librerías de UI utilizadas
 
 - [Tailwind CSS v4](https://tailwindcss.com/) — utilidades CSS.
-- [shadcn-vue](https://www.shadcn-vue.com/) — componentes base (Button, etc.), generados dentro del proyecto en `src/components/ui`.
+- [shadcn-vue](https://www.shadcn-vue.com/) — componentes base (Button, etc.), generados dentro del proyecto en `src/shadcn`.
 - [Reka UI](https://reka-ui.com/) — primitivos headless (accesibilidad, foco, teclado) sobre los que se construye shadcn-vue.
 - [Lucide](https://lucide.dev/) (`@lucide/vue`) — librería de íconos.
 - [tw-animate-css](https://github.com/Wombosvideo/tw-animate-css) — utilidades de animación para Tailwind.
+
+## Estructura de componentes: `src/shadcn` vs `src/shared`
+
+```
+src/
+  shadcn/                    ← generado/gestionado por el CLI de shadcn-vue
+    button/
+      Button.vue
+      index.ts
+    utils.ts                 ← cn() (clsx + tailwind-merge)
+  shared/
+    components/
+      ui/
+        BaseButton.vue       ← componentes propios del proyecto
+```
+
+**Por qué separarlos:** `src/shadcn` es territorio del CLI (`npx shadcn-vue add <componente>`). Si algún día se vuelve a correr ese comando para actualizar un componente, el CLI **sobrescribe el archivo completo** — cualquier cambio manual ahí se pierde. Por eso:
+
+- **No se edita nada dentro de `src/shadcn` a mano.** Es el primitivo "en crudo" tal como lo genera shadcn-vue/Reka UI.
+- Los componentes propios del proyecto (con reglas de negocio, props restringidas, íconos, estados de `loading`, etc.) van en `src/shared/components/ui/`, como wrappers que consumen los primitivos de `src/shadcn` por dentro. Ejemplo: `BaseButton.vue` envuelve `shadcn/button` agregando `label`, `loading`, `prefixIcon`/`suffixIcon`.
+- El alias `ui` de `components.json` apunta a `@/shadcn`, así que cualquier `npx shadcn-vue add` futuro escribe automáticamente en el lugar correcto sin fricción.
+
+**Buena práctica al crear un wrapper (`Base*`):**
+- Definir las props explícitas que se permiten (no usar `v-bind="$attrs"` abierto) — así el componente controla qué se puede configurar desde afuera en vez de exponer toda la API del primitivo.
+- Reusar los tipos del primitivo (`ButtonVariants['variant']`, etc.) en vez de redefinir uniones de strings a mano, para que se mantengan sincronizados si el primitivo cambia.
+- Declarar `class` como prop tipada (`HTMLAttributes['class']`) y mezclarla con `cn()` en vez de dejar que Tailwind pise clases por defecto sin resolver conflictos.
 
 ## Configuración recomendada del editor
 
