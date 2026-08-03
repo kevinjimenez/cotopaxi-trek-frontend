@@ -16,9 +16,9 @@
   "aliases": {
     "components": "@/shared/components",
     "utils": "@/shadcn/utils",
-    "ui": "@/shadcn",
-    "lib": "@/lib",
-    "composables": "@/composables"
+    "ui": "@/shadcn/ui",
+    "lib": "@/shadcn/lib",
+    "composables": "@/shadcn/composables"
   },
   "registries": {}
 }

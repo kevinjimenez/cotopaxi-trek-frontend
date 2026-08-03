@@ -15,15 +15,20 @@ Esta plantilla te ayuda a empezar a desarrollar con Vue 3 en Vite.
 ```
 src/
   shadcn/                    ← generado/gestionado por el CLI de shadcn-vue
-    button/
-      Button.vue
-      index.ts
+    ui/
+      button/
+        Button.vue
+        index.ts
     utils.ts                 ← cn() (clsx + tailwind-merge)
+    lib/                     ← helpers que algún componente del registry pueda generar
+    composables/             ← composables que algún componente del registry pueda generar (ej. useToast)
   shared/
     components/
       ui/
         BaseButton.vue       ← componentes propios del proyecto
 ```
+
+Los alias `ui`, `utils`, `lib` y `composables` de `components.json` apuntan todos dentro de `src/shadcn/`, así cualquier `npx shadcn-vue add` futuro (sea un componente, un helper o un composable) cae en el lugar correcto automáticamente, sin mezclarse con código propio.
 
 **Por qué separarlos:** `src/shadcn` es territorio del CLI (`npx shadcn-vue add <componente>`). Si algún día se vuelve a correr ese comando para actualizar un componente, el CLI **sobrescribe el archivo completo** — cualquier cambio manual ahí se pierde. Por eso:
 
