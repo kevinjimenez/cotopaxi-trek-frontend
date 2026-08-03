@@ -2,7 +2,8 @@
   <h1 class="text-3xl font-bold underline">
     Hello world!
   </h1>
-  <Button>Click me</Button>
+
+  <Button class="bg-red-300">Click me</Button>
 </template>
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
