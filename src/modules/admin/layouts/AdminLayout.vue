@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import BaseButton from '@/shared/components/ui/BaseButton.vue';
-import { useRouter } from 'vue-router';
+import { cn } from '@/shadcn/utils';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 
 const goTo = (name: string) => {
   router.push({
     name,
   });
 };
+
+const navLinkClass = (name: string) =>
+  cn(
+    'underline-offset-12 decoration-primary hover:underline hover:decoration-2',
+    route.name === name ? 'text-foreground underline decoration-2' : 'text-foreground',
+  );
 </script>
 
 <template>
@@ -21,19 +29,19 @@ const goTo = (name: string) => {
     <div class="bg-background w-full flex px-10 py-2 items-center justify-between border border-b">
       <div class="flex">
         <BaseButton
-          class="text-foreground underline-offset-12 decoration-primary hover:underline hover:decoration-2"
+          :class="navLinkClass('season')"
           label="Temporadas"
           variant="link"
           @click="() => goTo('season')"
         />
         <BaseButton
-          class="text-foreground underline-offset-12 decoration-primary hover:underline hover:decoration-2"
+          :class="navLinkClass('mountain')"
           label="Montaña"
           variant="link"
           @click="() => goTo('mountain')"
         />
         <BaseButton
-          class="text-foreground underline-offset-12 decoration-primary hover:underline hover:decoration-2"
+          :class="navLinkClass('user')"
           label="usuarios"
           variant="link"
           @click="() => goTo('user')"
