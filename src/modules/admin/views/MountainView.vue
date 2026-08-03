@@ -40,7 +40,10 @@ const { data } = useGetMountains();
           </div>
 
           <div class="flex items-center gap-x-2.5">
-            <BaseBadge class="bg-success/10 text-success text-[0.68rem] font-bold" label="Activa" />
+            <BaseBadge
+              class="bg-success/10 text-success text-[0.68rem] font-semibold"
+              label="Activa"
+            />
             <BaseButton
               class="text-[0.8rem] border bg-background"
               variant="secondary"
