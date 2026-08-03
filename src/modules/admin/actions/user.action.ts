@@ -6,10 +6,12 @@ export interface UserWithSeasons {
   name: string;
   lastname: string;
   username: string;
+  phone: string;
   userSeasons: UserSeason[];
 }
 
 export interface UserSeason {
+  status: boolean;
   season: Season;
 }
 
@@ -17,6 +19,7 @@ export interface Season {
   id: number;
   name: string;
   year: number;
+  isCurrent: boolean;
   seasonMountains: SeasonMountain[];
 }
 
@@ -40,11 +43,14 @@ const LIST = `
           name
           lastname
           username
+          phone
           userSeasons {
+              status
               season {
                   id
                   name
                   year
+                  isCurrent
                   seasonMountains {
                       sortOrder
                       price
