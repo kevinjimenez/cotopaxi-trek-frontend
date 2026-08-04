@@ -31,10 +31,10 @@ const { data } = useGetSeasonsWithMountains();
       />
     </section>
 
-    <Accordion type="single" collapsible class="w-full border rounded-lg mt-5">
+    <Accordion type="single" collapsible class="w-full border rounded-lg mt-5 bg-white">
       <AccordionItem v-for="item in data" :key="item.id" :value="`item-${item.id}`" class="">
         <AccordionTrigger
-          class="hover:no-underline items-center justify-center p-3 flex flex-row-reverse [&[data-state=open]>svg]:rotate-90"
+          class="hover:no-underline items-center justify-center p-3 flex flex-row-reverse [&[data-state=open]>svg]:rotate-90 hover:bg-background"
         >
           <template #icon>
             <ChevronRight class="text-muted-foreground size-4 transition-transform duration-200" />
@@ -46,6 +46,7 @@ const { data } = useGetSeasonsWithMountains();
                 <p class="text-xs text-muted-foreground">
                   {{ formatDate(item.startDate) }} - {{ formatDate(item.endDate) }}
                 </p>
+                <div class="size-1 bg-muted-foreground rounded-full" />
                 <p class="text-xs text-muted-foreground">
                   {{ item.seasonMountains.length }} Montañas
                 </p>
@@ -75,12 +76,12 @@ const { data } = useGetSeasonsWithMountains();
             </div>
           </div>
         </AccordionTrigger>
-        <AccordionContent>
-          <div class="pl-16 pr-4">
+        <AccordionContent class="bg-white">
+          <div class="pl-16 pr-4 pt-2">
             <div
               v-for="(seasonMountain, i) in item.seasonMountains"
               :key="i"
-              class="flex w-full border mb-2 rounded-sm p-2.5 items-center justify-between"
+              class="flex w-full border mb-2 rounded-sm p-2.5 items-center justify-between bg-background"
             >
               <div class="flex gap-x-2 items-center">
                 <BaseBadge

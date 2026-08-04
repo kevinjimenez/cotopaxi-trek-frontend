@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseButton from '@/shared/components/ui/BaseButton.vue';
 import { ChevronRight, Plus } from '@lucide/vue';
-import { useGetUsersWithSeasons } from '../actions/user.action';
+import { useGetUsersWithSeasons, type UserWithSeasons } from '../actions/user.action';
 import {
   Accordion,
   AccordionContent,
@@ -12,6 +12,8 @@ import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
 import { formatDate, isAfterNow } from '@/shared/utils/date.utils';
 
 const { data } = useGetUsersWithSeasons();
+
+const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.status);
 </script>
 
 <template>
@@ -29,10 +31,10 @@ const { data } = useGetUsersWithSeasons();
       />
     </section>
 
-    <Accordion type="single" collapsible class="w-full border rounded-lg mt-5">
-      <AccordionItem v-for="item in data" :key="item.id" :value="`item-${item.id}`" class="">
+    <Accordion type="single" collapsible class="w-full border rounded-lg mt-5 bg-white">
+      <AccordionItem v-for="item in data" :key="item.id" :value="`item-${item.id}`">
         <AccordionTrigger
-          class="hover:no-underline items-center justify-center p-3 flex flex-row-reverse [&[data-state=open]>svg]:rotate-90"
+          class="hover:no-underline items-center justify-center p-3 flex flex-row-reverse [&[data-state=open]>svg]:rotate-90 hover:bg-background"
         >
           <template #icon>
             <ChevronRight class="text-muted-foreground size-4 transition-transform duration-200" />
@@ -44,7 +46,9 @@ const { data } = useGetUsersWithSeasons();
                 <p class="text-xs text-muted-foreground">
                   {{ item.phone }}
                 </p>
+                <div class="size-1 bg-muted-foreground rounded-full" />
                 <p class="text-xs text-muted-foreground">@{{ item.username }}</p>
+                <div class="size-1 bg-muted-foreground rounded-full" />
                 <p class="text-xs text-muted-foreground">
                   {{
                     item.userSeasons.find((userSeason) => {
@@ -83,15 +87,12 @@ const { data } = useGetUsersWithSeasons();
           </div>
         </AccordionTrigger>
         <AccordionContent>
-          <div class="pl-16 pr-4">
-            <span class="text-[0.79rem] font-semibold">{{
-              item.userSeasons.find((e) => e.status)?.season.name
-            }}</span>
+          <div class="pl-16 pr-4 pt-2">
+            <span class="text-[0.79rem] font-semibold">{{ activeSeason(item)?.season.name }}</span>
             <div
-              v-for="(userSeason, i) in item.userSeasons.find((i) => i.status)?.season
-                .seasonMountains"
+              v-for="(userSeason, i) in activeSeason(item)?.season.seasonMountains"
               :key="i"
-              class="flex w-full border my-2 rounded-sm p-2.5 items-center justify-between"
+              class="flex w-full border my-2 rounded-sm p-2.5 items-center justify-between bg-background"
             >
               <div class="flex gap-x-2 items-center">
                 <BaseBadge

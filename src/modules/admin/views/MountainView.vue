@@ -25,8 +25,8 @@ const { data } = useGetMountains();
       />
     </section>
 
-    <div class="border w-full rounded-lg flex flex-col mt-5">
-      <div v-for="(item, index) in data" :key="index" class="w-full">
+    <div class="border w-full rounded-lg flex flex-col mt-5 bg-white">
+      <div v-for="(item, index) in data" :key="index" class="w-full hover:bg-background rounded-lg">
         <div class="py-3 px-4 flex items-center justify-between">
           <div class="flex flex-col gap-y-1">
             <h6 class="font-bold text-sm">{{ item.name }}</h6>
