@@ -68,7 +68,8 @@
 :root {
   /* Base */
   --radius: 0.55rem; /* radio de borde por defecto (rounded-*) */
-  --background: oklch(1 0 0); /* fondo general de la app */
+  /*--background: oklch(1 0 0); */ /* fondo general de la app */
+  --background: #f8fafc;
   --foreground: oklch(0.145 0 0); /* texto principal */
 
   /* Cards y popovers */
