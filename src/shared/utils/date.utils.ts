@@ -48,6 +48,4 @@ export const fromNow = (value: string | Date) => {
     isAfter: parsed.isAfter(dayjs()),
     label: `${prefix} ${parsed.fromNow()}`,
   };
-
-  // return `${prefix} ${parsed.fromNow()}`;
 };
