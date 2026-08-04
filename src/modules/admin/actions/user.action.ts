@@ -72,8 +72,11 @@ export const userKeys = {
   all: ['users_with_seasons'] as const,
 };
 
-export const listUsersWithSeasons = () =>
-  gql<{ usersWithSeasons: UserWithSeasons[] }>(LIST).then((d) => d.usersWithSeasons);
+export const listUsersWithSeasons = async () => {
+  const { usersWithSeasons } = await gql<{ usersWithSeasons: UserWithSeasons[] }>(LIST);
+
+  return usersWithSeasons;
+};
 
 export const useGetUsersWithSeasons = () => {
   return useQuery({

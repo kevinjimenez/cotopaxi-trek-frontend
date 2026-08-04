@@ -4,7 +4,7 @@ import type { ButtonVariants } from '@/shadcn/ui/button';
 import { cn } from '@/shadcn/utils';
 import type { HTMLAttributes } from 'vue';
 interface Props {
-  label: string;
+  label: string | number;
   variant?: ButtonVariants['variant'];
   class?: HTMLAttributes['class'];
 }

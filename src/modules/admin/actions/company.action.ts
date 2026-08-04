@@ -24,7 +24,11 @@ export const mountainKeys = {
   all: ['mountains'] as const,
 };
 
-export const listMountains = () => gql<{ mountains: Mountain[] }>(LIST).then((d) => d.mountains);
+export const listMountains = async () => {
+  const { mountains } = await gql<{ mountains: Mountain[] }>(LIST);
+
+  return mountains;
+};
 
 export const useGetMountains = () => {
   return useQuery({

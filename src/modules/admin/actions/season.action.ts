@@ -56,8 +56,11 @@ export const seasonKeys = {
   all: ['seasons_with_mountains'] as const,
 };
 
-export const listSeasonsWithMountains = () =>
-  gql<{ seasonsWithMountains: SeasonWithMountains[] }>(LIST).then((d) => d.seasonsWithMountains);
+export const listSeasonsWithMountains = async () => {
+  const { seasonsWithMountains } = await gql<{ seasonsWithMountains: SeasonWithMountains[] }>(LIST);
+
+  return seasonsWithMountains;
+};
 
 export const useGetSeasonsWithMountains = () => {
   return useQuery({

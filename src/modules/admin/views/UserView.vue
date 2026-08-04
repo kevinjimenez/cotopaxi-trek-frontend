@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseButton from '@/shared/components/ui/BaseButton.vue';
 import { ChevronRight, Plus } from '@lucide/vue';
-import { useGetUsersWithSeasons } from '../actions/user.action';
+import { useGetUsersWithSeasons, type UserWithSeasons } from '../actions/user.action';
 import {
   Accordion,
   AccordionContent,
@@ -9,8 +9,11 @@ import {
   AccordionTrigger,
 } from '@/shadcn/ui/accordion';
 import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
+import { formatDate, isAfterNow } from '@/shared/utils/date.utils';
 
 const { data } = useGetUsersWithSeasons();
+
+const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.status);
 </script>
 
 <template>
@@ -28,10 +31,10 @@ const { data } = useGetUsersWithSeasons();
       />
     </section>
 
-    <Accordion type="single" collapsible class="w-full border rounded-lg mt-5">
-      <AccordionItem v-for="item in data" :key="item.id" :value="`item-${item.id}`" class="">
+    <Accordion type="single" collapsible class="w-full border rounded-lg mt-5 bg-white">
+      <AccordionItem v-for="item in data" :key="item.id" :value="`item-${item.id}`">
         <AccordionTrigger
-          class="hover:no-underline items-center justify-center p-4 flex flex-row-reverse [&[data-state=open]>svg]:rotate-90"
+          class="hover:no-underline items-center justify-center p-3 flex flex-row-reverse [&[data-state=open]>svg]:rotate-90 hover:bg-background"
         >
           <template #icon>
             <ChevronRight class="text-muted-foreground size-4 transition-transform duration-200" />
@@ -43,7 +46,9 @@ const { data } = useGetUsersWithSeasons();
                 <p class="text-xs text-muted-foreground">
                   {{ item.phone }}
                 </p>
+                <div class="size-1 bg-muted-foreground rounded-full" />
                 <p class="text-xs text-muted-foreground">@{{ item.username }}</p>
+                <div class="size-1 bg-muted-foreground rounded-full" />
                 <p class="text-xs text-muted-foreground">
                   {{
                     item.userSeasons.find((userSeason) => {
@@ -81,7 +86,42 @@ const { data } = useGetUsersWithSeasons();
             </div>
           </div>
         </AccordionTrigger>
-        <AccordionContent> {{ item.id }}</AccordionContent>
+        <AccordionContent>
+          <div class="pl-16 pr-4 pt-2">
+            <span class="text-[0.79rem] font-semibold">{{ activeSeason(item)?.season.name }}</span>
+            <div
+              v-for="(userSeason, i) in activeSeason(item)?.season.seasonMountains"
+              :key="i"
+              class="flex w-full border my-2 rounded-sm p-2.5 items-center justify-between bg-background"
+            >
+              <div class="flex gap-x-2 items-center">
+                <BaseBadge
+                  class="size-5 bg-primary/10 text-primary"
+                  :label="userSeason.sortOrder"
+                />
+                <span class="text-[0.79rem] font-semibold">{{ userSeason.mountain.name }}</span>
+                <span class="text-xs text-muted-foreground">{{
+                  formatDate(userSeason.startDate, 'D MMM')
+                }}</span>
+              </div>
+              <div class="flex gap-x-2">
+                <BaseBadge
+                  :class="[
+                    'font-semibold text-[0.6rem]',
+                    isAfterNow(userSeason.startDate)
+                      ? 'bg-gray-500/10 text-gray-500'
+                      : 'bg-primary/10 text-primary',
+                  ]"
+                  :label="isAfterNow(userSeason.startDate) ? 'Realizado' : 'Próxima'"
+                />
+                <BaseBadge
+                  class="bg-success/10 text-success font-semibold text-[0.6rem]"
+                  label="Pagado"
+                />
+              </div>
+            </div>
+          </div>
+        </AccordionContent>
       </AccordionItem>
     </Accordion>
   </section>

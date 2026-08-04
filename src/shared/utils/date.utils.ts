@@ -27,6 +27,16 @@ export const formatDate = (value: string | Date, format: string = 'YYYY-MM-DD') 
   return parsed.format(format);
 };
 
+export const isAfterNow = (value: string | Date) => {
+  if (!value) return false;
+
+  const parsed = dayjs(value);
+
+  if (!parsed.isValid()) return false;
+
+  return parsed.isAfter(dayjs());
+};
+
 export const fromNow = (value: string | Date) => {
   if (!value)
     return {
@@ -48,6 +58,4 @@ export const fromNow = (value: string | Date) => {
     isAfter: parsed.isAfter(dayjs()),
     label: `${prefix} ${parsed.fromNow()}`,
   };
-
-  // return `${prefix} ${parsed.fromNow()}`;
 };
