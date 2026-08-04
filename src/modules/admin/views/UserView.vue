@@ -9,6 +9,7 @@ import {
   AccordionTrigger,
 } from '@/shadcn/ui/accordion';
 import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
+import { formatDate, isAfterNow } from '@/shared/utils/date.utils';
 
 const { data } = useGetUsersWithSeasons();
 </script>
@@ -81,7 +82,45 @@ const { data } = useGetUsersWithSeasons();
             </div>
           </div>
         </AccordionTrigger>
-        <AccordionContent> {{ item.id }}</AccordionContent>
+        <AccordionContent>
+          <div class="pl-16 pr-4">
+            <span class="text-[0.79rem] font-semibold">{{
+              item.userSeasons.find((e) => e.status)?.season.name
+            }}</span>
+            <div
+              v-for="(userSeason, i) in item.userSeasons.find((i) => i.status)?.season
+                .seasonMountains"
+              :key="i"
+              class="flex w-full border my-2 rounded-sm p-2.5 items-center justify-between"
+            >
+              <div class="flex gap-x-2 items-center">
+                <BaseBadge
+                  class="size-5 bg-primary/10 text-primary"
+                  :label="userSeason.sortOrder"
+                />
+                <span class="text-[0.79rem] font-semibold">{{ userSeason.mountain.name }}</span>
+                <span class="text-xs text-muted-foreground">{{
+                  formatDate(userSeason.startDate, 'D MMM')
+                }}</span>
+              </div>
+              <div class="flex gap-x-2">
+                <BaseBadge
+                  :class="[
+                    'font-semibold text-[0.6rem]',
+                    isAfterNow(userSeason.startDate)
+                      ? 'bg-gray-500/10 text-gray-500'
+                      : 'bg-primary/10 text-primary',
+                  ]"
+                  :label="isAfterNow(userSeason.startDate) ? 'Realizado' : 'Próxima'"
+                />
+                <BaseBadge
+                  class="bg-success/10 text-success font-semibold text-[0.6rem]"
+                  label="Pagado"
+                />
+              </div>
+            </div>
+          </div>
+        </AccordionContent>
       </AccordionItem>
     </Accordion>
   </section>
