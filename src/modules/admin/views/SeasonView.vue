@@ -75,7 +75,27 @@ const { data } = useGetSeasonsWithMountains();
             </div>
           </div>
         </AccordionTrigger>
-        <AccordionContent> {{ item.id }}</AccordionContent>
+        <AccordionContent>
+          <div class="pl-16 pr-4">
+            <div
+              v-for="(seasonMountain, i) in item.seasonMountains"
+              :key="i"
+              class="flex w-full border mb-2 rounded-sm p-2.5 items-center justify-between"
+            >
+              <div class="flex gap-x-2 items-center">
+                <BaseBadge
+                  class="size-5 bg-primary/10 text-primary"
+                  :label="seasonMountain.sortOrder"
+                />
+                <span class="text-[0.79rem] font-semibold">{{ seasonMountain.mountain.name }}</span>
+                <span class="text-xs text-muted-foreground">{{
+                  formatDate(seasonMountain.startDate, 'D MMM')
+                }}</span>
+              </div>
+              <span class="text-[0.79rem] font-bold">${{ seasonMountain.price }}</span>
+            </div>
+          </div>
+        </AccordionContent>
       </AccordionItem>
     </Accordion>
   </section>
