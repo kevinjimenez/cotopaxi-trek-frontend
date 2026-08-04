@@ -31,7 +31,7 @@ const { data } = useGetUsersWithSeasons();
     <Accordion type="single" collapsible class="w-full border rounded-lg mt-5">
       <AccordionItem v-for="item in data" :key="item.id" :value="`item-${item.id}`" class="">
         <AccordionTrigger
-          class="hover:no-underline items-center justify-center p-4 flex flex-row-reverse [&[data-state=open]>svg]:rotate-90"
+          class="hover:no-underline items-center justify-center p-3 flex flex-row-reverse [&[data-state=open]>svg]:rotate-90"
         >
           <template #icon>
             <ChevronRight class="text-muted-foreground size-4 transition-transform duration-200" />
