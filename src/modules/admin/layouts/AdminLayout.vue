@@ -32,6 +32,12 @@ const navLinkClass = (name: string) =>
       <div class="bg-white w-full flex px-10 py-2 items-center justify-between">
         <div class="flex">
           <BaseButton
+            :class="navLinkClass('company')"
+            label="Empresas"
+            variant="link"
+            @click="() => goTo('company')"
+          />
+          <BaseButton
             :class="navLinkClass('season')"
             label="Temporadas"
             variant="link"
