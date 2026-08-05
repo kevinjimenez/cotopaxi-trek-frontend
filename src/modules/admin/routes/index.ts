@@ -7,6 +7,15 @@ export const adminRoutes: RouteRecordRaw = {
   component: AdminLayout,
   children: [
     {
+      path: 'company',
+      name: 'company',
+      component: () => import('@/modules/admin/views/CompanyView.vue'),
+      meta: {
+        title: 'Empresa',
+        requiresAuth: false,
+      },
+    },
+    {
       path: 'season',
       name: 'season',
       component: () => import('@/modules/admin/views/SeasonView.vue'),

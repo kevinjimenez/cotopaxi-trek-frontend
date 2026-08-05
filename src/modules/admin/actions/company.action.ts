@@ -1,38 +1,46 @@
 import { gql } from '@/shared/services/graphql';
 import { useQuery } from '@tanstack/vue-query';
 
-interface Mountain {
+interface Company {
   id: string;
   name: string;
-  location: string;
-  altitudeMeters: string;
+  whatsapp: string;
+  instagram: string | null;
+  status: boolean;
+  logoUrl: string | null;
+  slug: string;
+  primaryColor: string | null;
 }
 
 const LIST = `
   query {
-      mountains {
+      companies {
           id
           name
-          location
-          altitudeMeters
+          whatsapp
+          instagram
           status
+          logoUrl
+          slug
+          primaryColor
       }
   }
+
 `;
 
-export const mountainKeys = {
-  all: ['mountains'] as const,
+export const companyKeys = {
+  all: ['companies'] as const,
 };
 
-export const listMountains = async () => {
-  const { mountains } = await gql<{ mountains: Mountain[] }>(LIST);
+export const listCompanies = async () => {
+  const { companies } = await gql<{ companies: Company[] }>(LIST);
 
-  return mountains;
+  return companies;
 };
 
-export const useGetMountains = () => {
+export const useGetCompanies = () => {
   return useQuery({
-    queryKey: mountainKeys.all,
-    queryFn: listMountains,
+    queryKey: companyKeys.all,
+    queryFn: listCompanies,
   });
 };

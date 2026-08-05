@@ -10,6 +10,8 @@ Esta plantilla te ayuda a empezar a desarrollar con Vue 3 en Vite.
 - [Lucide](https://lucide.dev/) (`@lucide/vue`) — librería de íconos.
 - [tw-animate-css](https://github.com/Wombosvideo/tw-animate-css) — utilidades de animación para Tailwind.
 
+**Avatares:** se usa [DiceBear](https://www.dicebear.com/) como placeholder, ej. `https://api.dicebear.com/10.x/avataaars-neutral/svg?seed=<valor>` (el `seed` determina el avatar generado).
+
 ## Librerías de datos
 
 - [Axios](https://axios-http.com/) — cliente HTTP para consumir la API del backend.

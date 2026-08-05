@@ -53,7 +53,7 @@ const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.s
                   {{
                     item.userSeasons.find((userSeason) => {
                       return userSeason.status;
-                    })?.season.seasonMountains.length
+                    })?.season.seasonMountains.length ?? 0
                   }}
                   Montañas
                 </p>
@@ -78,7 +78,7 @@ const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.s
                 label="Activa"
               />
               <BaseButton
-                class="text-[0.8rem] border bg-background"
+                class="text-[0.8rem] border bg-white"
                 variant="secondary"
                 label="Editar"
                 @click.stop
@@ -87,40 +87,54 @@ const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.s
           </div>
         </AccordionTrigger>
         <AccordionContent>
-          <div class="pl-16 pr-4 pt-2">
-            <span class="text-[0.79rem] font-semibold">{{ activeSeason(item)?.season.name }}</span>
-            <div
-              v-for="(userSeason, i) in activeSeason(item)?.season.seasonMountains"
-              :key="i"
-              class="flex w-full border my-2 rounded-sm p-2.5 items-center justify-between bg-background"
-            >
-              <div class="flex gap-x-2 items-center">
-                <BaseBadge
-                  class="size-5 bg-primary/10 text-primary"
-                  :label="userSeason.sortOrder"
-                />
-                <span class="text-[0.79rem] font-semibold">{{ userSeason.mountain.name }}</span>
-                <span class="text-xs text-muted-foreground">{{
-                  formatDate(userSeason.startDate, 'D MMM')
-                }}</span>
-              </div>
-              <div class="flex gap-x-2">
-                <BaseBadge
-                  :class="[
-                    'font-semibold text-[0.6rem]',
-                    isAfterNow(userSeason.startDate)
-                      ? 'bg-gray-500/10 text-gray-500'
-                      : 'bg-primary/10 text-primary',
-                  ]"
-                  :label="isAfterNow(userSeason.startDate) ? 'Realizado' : 'Próxima'"
-                />
-                <BaseBadge
-                  class="bg-success/10 text-success font-semibold text-[0.6rem]"
-                  label="Pagado"
-                />
+          <template
+            v-if="!activeSeason(item) || activeSeason(item)?.season.seasonMountains.length === 0"
+          >
+            <div class="w-full flex pl-12 pt-2">
+              <span class="text-muted-foreground/65 text-xs italic"
+                >No está inscrit@ en la temporada activa.</span
+              >
+            </div>
+          </template>
+
+          <template v-else>
+            <div class="pl-16 pr-4 pt-2">
+              <span class="text-[0.79rem] font-semibold">{{
+                activeSeason(item)?.season.name
+              }}</span>
+              <div
+                v-for="(userSeason, i) in activeSeason(item)?.season.seasonMountains"
+                :key="i"
+                class="flex w-full border my-2 rounded-sm p-2.5 items-center justify-between bg-background"
+              >
+                <div class="flex gap-x-2 items-center">
+                  <BaseBadge
+                    class="size-5 bg-primary/10 text-primary"
+                    :label="userSeason.sortOrder"
+                  />
+                  <span class="text-[0.79rem] font-semibold">{{ userSeason.mountain.name }}</span>
+                  <span class="text-xs text-muted-foreground">{{
+                    formatDate(userSeason.startDate, 'D MMM')
+                  }}</span>
+                </div>
+                <div class="flex gap-x-2">
+                  <BaseBadge
+                    :class="[
+                      'font-semibold text-[0.6rem]',
+                      isAfterNow(userSeason.startDate)
+                        ? 'bg-gray-500/10 text-gray-500'
+                        : 'bg-primary/10 text-primary',
+                    ]"
+                    :label="isAfterNow(userSeason.startDate) ? 'Realizado' : 'Próxima'"
+                  />
+                  <BaseBadge
+                    class="bg-success/10 text-success font-semibold text-[0.6rem]"
+                    label="Pagado"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          </template>
         </AccordionContent>
       </AccordionItem>
     </Accordion>
