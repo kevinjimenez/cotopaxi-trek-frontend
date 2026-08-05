@@ -29,7 +29,7 @@ const { data } = useGetCompanies();
         <div class="flex items-center gap-x-2">
           <picture class="size-14 border bg-primary/20 rounded-lg overflow-hidden">
             <img
-              :src="`https://api.dicebear.com/10.x/avataaars-neutral/svg?seed=${item.slug}`"
+              :src="`https://api.dicebear.com/10.x/bottts-neutral/svg?seed=${item.slug}`"
               width="100%"
             />
           </picture>
