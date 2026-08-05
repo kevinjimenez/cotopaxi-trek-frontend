@@ -44,11 +44,7 @@ const { data } = useGetMountains();
               class="bg-success/10 text-success text-[0.68rem] font-semibold"
               label="Activa"
             />
-            <BaseButton
-              class="text-[0.8rem] border bg-background"
-              variant="secondary"
-              label="Editar"
-            />
+            <BaseButton class="text-[0.8rem] border bg-white" variant="secondary" label="Editar" />
           </div>
         </div>
         <BaseDivider v-if="index !== (data?.length ?? 0) - 1" />

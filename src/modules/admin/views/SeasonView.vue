@@ -68,7 +68,7 @@ const { data } = useGetSeasonsWithMountains();
                 label="Activa"
               />
               <BaseButton
-                class="text-[0.8rem] border bg-background"
+                class="text-[0.8rem] border bg-white"
                 variant="secondary"
                 label="Editar"
                 @click.stop
