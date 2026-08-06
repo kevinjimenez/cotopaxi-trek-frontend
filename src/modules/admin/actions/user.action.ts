@@ -79,15 +79,6 @@ export const userKeys = {
 export const listUsersWithSeasons = async () => {
   const { usersWithSeasons } = await gql<{ usersWithSeasons: UserWithSeasons[] }>(LIST);
 
-  // console.log({ usersWithSeasons });
-
-  // const a = usersWithSeasons.map((i) => {
-  //   console.log(i);
-  //   return i.userSeasons;
-  // });
-
-  // console.log({ a });
-
   return usersWithSeasons;
 };
 
