@@ -11,6 +11,7 @@ export interface UserWithSeasons {
 }
 
 export interface UserSeason {
+  id: number;
   status: boolean;
   season: Season;
 }
@@ -24,6 +25,7 @@ export interface Season {
 }
 
 export interface SeasonMountain {
+  id: number;
   sortOrder: number;
   price: number;
   startDate: Date;
@@ -45,6 +47,7 @@ const LIST = `
           username
           phone
           userSeasons {
+              id
               status
               season {
                   id
@@ -52,6 +55,7 @@ const LIST = `
                   year
                   isCurrent
                   seasonMountains {
+                      id
                       sortOrder
                       price
                       startDate

@@ -1,17 +1,39 @@
 import { gql } from '@/shared/services/graphql';
 import { useQuery } from '@tanstack/vue-query';
 
-export interface SeasonWithMountains {
+export interface Season {
   id: number;
   name: string;
   year: number;
   startDate: Date;
   endDate: Date;
   isCurrent: boolean;
-  seasonMountains: SeasonMountain[];
+  mountains: Mountain[];
 }
 
-export interface SeasonMountain {
+export interface Mountain {
+  id: number;
+  sortOrder: number;
+  startDate: Date;
+  endDate: Date;
+  price: number;
+  seasonMountainId: number;
+  name: string;
+}
+
+export interface SeasonWithMountainsResponse {
+  id: number;
+  companyId: string;
+  name: string;
+  year: number;
+  startDate: Date;
+  endDate: Date;
+  isCurrent: boolean;
+  seasonMountains: SeasonMountainResponse[];
+}
+
+export interface SeasonMountainResponse {
+  id: number;
   sortOrder: number;
   startDate: Date;
   endDate: Date;
@@ -19,7 +41,7 @@ export interface SeasonMountain {
   mountain: Mountain;
 }
 
-export interface Mountain {
+export interface MountainResponse {
   id: number;
   name: string;
 }
@@ -28,15 +50,14 @@ const LIST = `
   query {
       seasonsWithMountains {
           id
+          companyId
           name
           year
           startDate
           endDate
           isCurrent
-          # company {
-          #     name
-          # }
           seasonMountains {
+              id
               sortOrder
               startDate
               endDate
@@ -44,7 +65,6 @@ const LIST = `
               mountain {
                   id
                   name
-                  # altitudeMeters
               }
           }
       }
@@ -57,9 +77,23 @@ export const seasonKeys = {
 };
 
 export const listSeasonsWithMountains = async () => {
-  const { seasonsWithMountains } = await gql<{ seasonsWithMountains: SeasonWithMountains[] }>(LIST);
+  const { seasonsWithMountains } = await gql<{
+    seasonsWithMountains: SeasonWithMountainsResponse[];
+  }>(LIST);
 
-  return seasonsWithMountains;
+  const newSeasonsWithMountains = seasonsWithMountains.map((seasonsWithMountain) => {
+    const { seasonMountains, ...rest } = seasonsWithMountain;
+    if (seasonMountains.length !== 0) {
+      const mountains = seasonMountains.map((seasonMountain) => {
+        const { mountain, id, ...rest } = seasonMountain;
+        return { ...rest, seasonMountainId: id, id: mountain.id, name: mountain.name };
+      });
+      return { ...rest, mountains };
+    }
+    return { ...rest, mountains: [] };
+  });
+
+  return newSeasonsWithMountains;
 };
 
 export const useGetSeasonsWithMountains = () => {
