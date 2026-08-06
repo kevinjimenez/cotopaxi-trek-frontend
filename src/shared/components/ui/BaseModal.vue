@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/shadcn/ui/dialog';
+import { Dialog, DialogDescription, DialogScrollContent, DialogTitle } from '@/shadcn/ui/dialog';
+import { cn } from '@/shadcn/utils';
 import { VisuallyHidden } from 'reka-ui';
 
 interface Props {
   open: boolean;
   title?: string;
   description?: string;
+  classContainer?: string;
 }
 
 defineProps<Props>();
@@ -21,8 +23,8 @@ const onOpenChange = (isOpen: boolean) => {
 
 <template>
   <Dialog :open="open" @update:open="onOpenChange">
-    <DialogContent
-      class="p-6 w-full max-w-md"
+    <DialogScrollContent
+      :class="cn('max-w-3xl', classContainer)"
       :aria-describedby="description ? undefined : undefined"
     >
       <DialogTitle v-if="title">{{ title }}</DialogTitle>
@@ -31,6 +33,6 @@ const onOpenChange = (isOpen: boolean) => {
       </VisuallyHidden>
       <DialogDescription v-if="description">{{ description }}</DialogDescription>
       <slot />
-    </DialogContent>
+    </DialogScrollContent>
   </Dialog>
 </template>
