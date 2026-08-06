@@ -62,6 +62,26 @@ Dos cosas a tener en cuenta:
 - El ícono por defecto (`ChevronDown`) gira 180° al abrir (`[&[data-state=open]>svg]:rotate-180`, definido en el `class` base del primitivo). Si tu ícono de reemplazo espera otra rotación (ej. `ChevronRight` → `v` con solo 90°), hay que pasar esa misma clase con el ángulo nuevo por `class` en el consumidor — `cn()`/tailwind-merge la resuelve porque comparten el mismo prefijo de variante (`[&[data-state=open]>svg]:`), así que la del consumidor gana sobre la del primitivo.
 - El ícono que pongas en el slot sigue siendo hijo directo del trigger (por eso el selector `>svg` de arriba lo sigue alcanzando), así que no hace falta duplicar `transition-transform`/`size-4` salvo que quieras un tamaño distinto.
 
+**El patrón `as-child` (Reka UI):** varios primitivos (`DialogTrigger`, `VisuallyHidden`, etc.) por defecto renderizan su propio elemento envolviendo lo que le pongas adentro. Ejemplo sin `as-child`:
+
+```vue
+<DialogTrigger>
+  <BaseButton label="Nueva montaña" />
+</DialogTrigger>
+```
+
+Esto genera `<button><button>...</button></button>` en el DOM — HTML inválido (botón dentro de botón). Con `as-child`:
+
+```vue
+<DialogTrigger as-child>
+  <BaseButton label="Nueva montaña" />
+</DialogTrigger>
+```
+
+`DialogTrigger` deja de crear su propio elemento y en su lugar le fusiona su comportamiento (listeners de click, atributos ARIA como `aria-haspopup`/`aria-expanded`) directo al único hijo (`BaseButton`). Resultado: un solo `<button>` en el DOM, con el comportamiento del trigger encima. Regla general: **`as-child` = "aplica tus estilos/comportamiento al hijo, no agregues un elemento nuevo"**.
+
+Requisito para que funcione: el hijo debe ser un componente de **un solo nodo raíz** que reenvíe attrs/listeners al DOM (Vue lo hace automático en componentes single-root, como ya pasa con `BaseButton`) — si el hijo tiene varios nodos raíz o no reenvía attrs, `as-child` no tiene a quién fusionarle el comportamiento y falla.
+
 ## Configuración recomendada del editor
 
 [VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (y deshabilitar Vetur).
