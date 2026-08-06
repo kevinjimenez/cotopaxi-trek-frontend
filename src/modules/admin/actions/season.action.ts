@@ -93,8 +93,6 @@ export const listSeasonsWithMountains = async () => {
     return { ...rest, mountains: [] };
   });
 
-  console.log({ newSeasonsWithMountains });
-
   return newSeasonsWithMountains;
 };
 

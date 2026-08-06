@@ -27,8 +27,6 @@ export const mountainKeys = {
 export const listMountains = async () => {
   const { mountains } = await gql<{ mountains: Mountain[] }>(LIST);
 
-  console.log({ mountains });
-
   return mountains;
 };
 
