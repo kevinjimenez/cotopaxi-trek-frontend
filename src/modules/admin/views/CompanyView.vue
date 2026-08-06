@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import BaseButton from '@/shared/components/ui/BaseButton.vue';
+import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import { BookUser, Plus, Shield } from '@lucide/vue';
 import { useGetCompanies } from '../actions/company.action';
+import { ref } from 'vue';
 
 const { data } = useGetCompanies();
+
+const open = ref(false);
+
+const openModal = () => {
+  open.value = true;
+};
 </script>
 
 <template>
@@ -18,7 +26,12 @@ const { data } = useGetCompanies();
         label="Nueva empresa"
         :prefix-icon="Plus"
         icon-class="size-2.5"
+        @click="openModal()"
       />
+      <BaseModal :open="open" @close="open = false">
+        <!-- formulario -->
+        <h3 class="font-bold text-lg">Nueva montaña</h3>
+      </BaseModal>
     </section>
     <div class="grid grid-cols-3 gap-3 mt-5">
       <div
