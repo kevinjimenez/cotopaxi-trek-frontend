@@ -28,9 +28,10 @@ const openModal = () => {
         icon-class="size-2.5"
         @click="openModal()"
       />
-      <BaseModal :open="open" @close="open = false">
-        <!-- formulario -->
-        <h3 class="font-bold text-lg">Nueva montaña</h3>
+      <BaseModal title="Nueva empresa" :open="open" @close="open = false">
+        <div class="flex flex-col w-full gap-y-5 bg-red-200">
+          <span> modal company </span>
+        </div>
       </BaseModal>
     </section>
     <div class="grid grid-cols-3 gap-3 mt-5">
@@ -40,10 +41,10 @@ const openModal = () => {
         class="flex flex-col p-4 bg-white rounded-lg border gap-y-2"
       >
         <div class="flex items-center gap-x-2">
-          <picture class="size-14 border bg-primary/20 rounded-lg overflow-hidden">
+          <picture class="flex size-14 border bg-primary/20 rounded-lg overflow-hidden">
             <img
               :src="`https://api.dicebear.com/10.x/bottts-neutral/svg?seed=${item.slug}`"
-              width="100%"
+              class="w-full object-cover"
             />
           </picture>
           <h6 class="text-base font-semibold">{{ item.name }}</h6>

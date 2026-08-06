@@ -10,8 +10,11 @@ import {
 } from '@/shadcn/ui/accordion';
 import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
 import { formatDate, isAfterNow } from '@/shared/utils/date.utils';
+import { ref } from 'vue';
+import BaseModal from '@/shared/components/ui/BaseModal.vue';
 
 const { data } = useGetUsersWithSeasons();
+const open = ref(false);
 
 const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.status);
 </script>
@@ -28,7 +31,13 @@ const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.s
         label="Nuevo usuario"
         :prefix-icon="Plus"
         icon-class="size-2.5"
+        @click="open = true"
       />
+      <BaseModal title="Nueva usuario" :open="open" @close="open = false">
+        <div class="flex flex-col w-full gap-y-5 bg-red-200">
+          <span> modal company </span>
+        </div>
+      </BaseModal>
     </section>
 
     <Accordion type="single" collapsible class="w-full border rounded-lg mt-5 bg-white">

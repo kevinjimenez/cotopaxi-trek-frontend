@@ -10,8 +10,12 @@ import {
   AccordionTrigger,
 } from '@/shadcn/ui/accordion';
 import { formatDate, fromNow } from '@/shared/utils/date.utils';
+import BaseModal from '@/shared/components/ui/BaseModal.vue';
+import { ref } from 'vue';
 
 const { data } = useGetSeasonsWithMountains();
+
+const open = ref(false);
 
 // const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-CA');
 </script>
@@ -28,7 +32,13 @@ const { data } = useGetSeasonsWithMountains();
         label="Nueva temporada"
         :prefix-icon="Plus"
         icon-class="size-2.5"
+        @click="open = true"
       />
+      <BaseModal title="Nueva temporada" :open="open" @close="open = false">
+        <div class="flex flex-col w-full gap-y-5 bg-red-200">
+          <span> modal company </span>
+        </div>
+      </BaseModal>
     </section>
 
     <Accordion type="single" collapsible class="w-full border rounded-lg mt-5 bg-white">
