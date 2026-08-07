@@ -1,7 +1,7 @@
 import { gql } from '@/shared/services/graphql';
 import { useQuery } from '@tanstack/vue-query';
 
-interface Mountain {
+export interface Mountain {
   id: string;
   name: string;
   location: string;

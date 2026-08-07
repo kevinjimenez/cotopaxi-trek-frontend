@@ -1,21 +1,41 @@
 <script setup lang="ts">
-import BaseButton from '@/shared/components/ui/BaseButton.vue';
-import { ChevronRight, Plus } from '@lucide/vue';
-import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
-import { useGetSeasonsWithMountains } from '../actions/season.action';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/shadcn/ui/accordion';
-import { formatDate, fromNow } from '@/shared/utils/date.utils';
+import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
+import BaseButton from '@/shared/components/ui/BaseButton.vue';
+import BaseDatePicker from '@/shared/components/ui/BaseDatePicker.vue';
+import BaseInput from '@/shared/components/ui/BaseInput.vue';
 import BaseModal from '@/shared/components/ui/BaseModal.vue';
-import { ref } from 'vue';
+import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
+import { formatDate, fromNow } from '@/shared/utils/date.utils';
+import { ChevronRight, GripHorizontal, Plus } from '@lucide/vue';
+import { ref, watch } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
+import { type Mountain, useGetMountains } from '../actions/mountain.action';
+import { useGetSeasonsWithMountains } from '../actions/season.action';
 
 const { data } = useGetSeasonsWithMountains();
+const { data: mountains } = useGetMountains();
+
+const cloneMountains = ref<Mountain[]>([]);
+const newMountains = ref<Mountain[]>([]);
+
+const addMountain = (id: string) => {
+  const mountain = cloneMountains.value.find((mountain) => mountain.id === id);
+  if (!mountain) return;
+  newMountains.value = [...newMountains.value, mountain];
+  cloneMountains.value = cloneMountains.value.filter((mountain) => mountain.id !== id);
+};
 
 const open = ref(false);
+
+watch(mountains, (fetchedMountains) => {
+  if (fetchedMountains) cloneMountains.value = [...fetchedMountains];
+});
 
 // const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-CA');
 </script>
@@ -35,8 +55,64 @@ const open = ref(false);
         @click="open = true"
       />
       <BaseModal title="Nueva temporada" :open="open" @close="open = false">
-        <div class="flex flex-col w-full gap-y-5 bg-red-200">
-          <span> modal company </span>
+        <div class="flex flex-col w-full gap-y-4">
+          <BaseInput label="Nombre" />
+          <div class="flex flex-row gap-x-4 w-full">
+            <BaseDatePicker label="inicio" />
+            <BaseDatePicker label="fin" />
+          </div>
+          <div class="flex w-full">
+            <div class="flex flex-col justify-center flex-1">
+              <h6 class="text-sm font-semibold">Temporada activa</h6>
+              <span class="text-xs text-muted-foreground">Visible y disponible para reservas.</span>
+            </div>
+            <BaseToggle />
+          </div>
+
+          <div class="flex flex-col w-full gap-y-1">
+            <span class="text-[0.7rem] uppercase text-muted-foreground font-semibold"
+              >disponibles - toca para agregar</span
+            >
+            <div class="flex flex-wrap gap-x-2">
+              <div
+                v-for="mountain in cloneMountains"
+                :key="mountain.id"
+                class="flex p-2 border border-primary border-dashed rounded-xl items-center justify-center gap-x-0.5 cursor-pointer"
+                @click="addMountain(mountain.id)"
+              >
+                <Plus class="size-3 text-primary" />
+                <span class="text-xs font-semibold text-primary">
+                  {{ mountain.name }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col w-full gap-y-1">
+            <span class="text-[0.7rem] uppercase text-muted-foreground font-semibold"
+              >orden de ascenso - arrastra para reordenar</span
+            >
+            <div class="flex flex-col gap-y-2">
+              <VueDraggable ref="el" v-model="newMountains">
+                <div v-for="(item, index) in newMountains" :key="item.id">
+                  <div
+                    class="flex w-full border mb-2 rounded-sm p-2.5 items-center justify-between bg-background cursor-move"
+                  >
+                    <GripHorizontal />
+                    <div class="flex gap-x-2 items-center">
+                      <BaseBadge class="size-5 bg-primary/10 text-primary" :label="index + 1" />
+                      <span class="text-[0.79rem] font-semibold">{{ item.name }}</span>
+                    </div>
+                  </div>
+                </div>
+              </VueDraggable>
+            </div>
+          </div>
+
+          <div class="flex w-full gap-x-2">
+            <BaseButton label="Cancelar" class="flex-1 border bg-white" variant="secondary" />
+            <BaseButton label="Guardar" class="flex-1" />
+          </div>
         </div>
       </BaseModal>
     </section>
