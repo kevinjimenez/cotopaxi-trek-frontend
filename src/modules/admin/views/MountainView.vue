@@ -87,7 +87,7 @@ const open = ref(false);
           </div>
           <div class="flex w-full gap-x-2">
             <BaseButton label="Cancelar" class="flex-1 border bg-white" variant="secondary" />
-            <BaseButton label="Cancelar" class="flex-1" />
+            <BaseButton label="Guardar" class="flex-1" />
           </div>
         </div>
       </BaseModal>
