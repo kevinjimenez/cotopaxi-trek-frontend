@@ -12,8 +12,8 @@ import BaseInput from '@/shared/components/ui/BaseInput.vue';
 import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { formatDate, fromNow } from '@/shared/utils/date.utils';
-import { ChevronRight, GripHorizontal, Plus } from '@lucide/vue';
-import { ref, watch } from 'vue';
+import { ChevronRight, GripHorizontal, Plus, X } from '@lucide/vue';
+import { ref, watch, type Ref } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { type Mountain, useGetMountains } from '../actions/mountain.action';
 import { useGetSeasonsWithMountains } from '../actions/season.action';
@@ -24,20 +24,29 @@ const { data: mountains } = useGetMountains();
 const cloneMountains = ref<Mountain[]>([]);
 const newMountains = ref<Mountain[]>([]);
 
-const addMountain = (id: string) => {
-  const mountain = cloneMountains.value.find((mountain) => mountain.id === id);
+const moveMountain = (id: string, from: Ref<Mountain[]>, to: Ref<Mountain[]>) => {
+  const mountain = from.value.find((m) => m.id === id);
   if (!mountain) return;
-  newMountains.value = [...newMountains.value, mountain];
-  cloneMountains.value = cloneMountains.value.filter((mountain) => mountain.id !== id);
+  to.value = [...to.value, mountain];
+  from.value = from.value.filter((m) => m.id !== id);
 };
+
+const addMountain = (id: string) => moveMountain(id, cloneMountains, newMountains);
+const removeMountain = (id: string) => moveMountain(id, newMountains, cloneMountains);
 
 const open = ref(false);
 
-watch(mountains, (fetchedMountains) => {
-  if (fetchedMountains) cloneMountains.value = [...fetchedMountains];
-});
+watch(
+  mountains,
+  (newMountains, oldMountains) => {
+    console.log({ newMountains, oldMountains });
+    if (newMountains) cloneMountains.value = [...newMountains];
+  },
+  {
+    immediate: true,
+  },
+);
 
-// const formatDate = (date: Date | string) => new Date(date).toLocaleDateString('en-CA');
 </script>
 
 <template>
@@ -54,7 +63,12 @@ watch(mountains, (fetchedMountains) => {
         icon-class="size-2.5"
         @click="open = true"
       />
-      <BaseModal title="Nueva temporada" :open="open" @close="open = false">
+      <BaseModal
+        title="Nueva temporada"
+        :open="open"
+        @close="open = false"
+        class-container="max-w-120"
+      >
         <div class="flex flex-col w-full gap-y-4">
           <BaseInput label="Nombre" />
           <div class="flex flex-row gap-x-4 w-full">
@@ -96,12 +110,25 @@ watch(mountains, (fetchedMountains) => {
               <VueDraggable ref="el" v-model="newMountains">
                 <div v-for="(item, index) in newMountains" :key="item.id">
                   <div
-                    class="flex w-full border mb-2 rounded-sm p-2.5 items-center justify-between bg-background cursor-move"
+                    class="flex w-full border mb-2 rounded-sm p-2.5 items-center bg-background cursor-move gap-x-2 relative"
                   >
-                    <GripHorizontal />
-                    <div class="flex gap-x-2 items-center">
+                    <BaseButton
+                      :prefix-icon="X"
+                      variant="ghost"
+                      size="icon-xs"
+                      class="absolute top-0 right-0 hover:bg-transparent hover:text-inherit text-muted-foreground"
+                      @click="removeMountain(item.id)"
+                    />
+                    <GripHorizontal class="text-muted-foreground" />
+                    <div class="flex gap-x-2 items-center w-full">
                       <BaseBadge class="size-5 bg-primary/10 text-primary" :label="index + 1" />
-                      <span class="text-[0.79rem] font-semibold">{{ item.name }}</span>
+                      <div class="flex flex-col w-full">
+                        <span class="text-[0.79rem] font-semibold">{{ item.name }}</span>
+                        <div class="flex gap-x-2">
+                          <BaseInput type="number" prefix="$" />
+                          <BaseDatePicker :format="'D MMM'" placeholder="Fecha, ej. 25 jul" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
