@@ -12,9 +12,16 @@ import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
 import { formatDate, isAfterNow } from '@/shared/utils/date.utils';
 import { ref } from 'vue';
 import BaseModal from '@/shared/components/ui/BaseModal.vue';
+import BaseTabs from '@/shared/components/ui/BaseTabs.vue';
+import BaseInput from '@/shared/components/ui/BaseInput.vue';
+import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 
 const { data } = useGetUsersWithSeasons();
 const open = ref(false);
+const tabs = [
+  { tab: 'personal', name: 'Datos personales', default: true },
+  { tab: 'season-mountains', name: 'Temporadas y montañas', default: false },
+];
 
 const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.status);
 </script>
@@ -33,10 +40,47 @@ const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.s
         icon-class="size-2.5"
         @click="open = true"
       />
-      <BaseModal title="Nueva usuario" :open="open" @close="open = false">
-        <div class="flex flex-col w-full gap-y-5 bg-red-200">
-          <span> modal company </span>
-        </div>
+      <BaseModal
+        title="Nueva usuario"
+        :open="open"
+        @close="open = false"
+        class-container="max-w-120"
+      >
+        <BaseTabs :tabs="tabs">
+          <template #personal>
+            <div class="flex flex-col w-full gap-y-2">
+              <BaseInput label="nombre" />
+              <BaseInput label="nombre" />
+              <div class="flex flex-col gap-y-4">
+                <span class="uppercase text-xs text-muted-foreground font-semibold"
+                  >Cuenta de acceso</span
+                >
+                <div class="flex gap-x-2">
+                  <BaseInput label="nombre" />
+                  <BaseInput label="nombre" />
+                </div>
+              </div>
+              <div class="flex w-full">
+                <div class="flex flex-col justify-center flex-1">
+                  <h6 class="text-sm font-semibold">Temporada activa</h6>
+                  <span class="text-xs text-muted-foreground"
+                    >Visible y disponible para reservas.</span
+                  >
+                </div>
+                <BaseToggle />
+              </div>
+              <div class="flex w-full gap-x-2">
+                <BaseButton label="Cancelar" class="flex-1 border bg-white" variant="secondary" />
+                <BaseButton label="Guardar" class="flex-1" />
+              </div>
+            </div>
+          </template>
+          <template #season-mountains>
+            <div class="flex flex-col w-full gap-y-5 bg-red-200">
+              <span>season-mountains</span>
+            </div>
+          </template>
+        </BaseTabs>
       </BaseModal>
     </section>
 
