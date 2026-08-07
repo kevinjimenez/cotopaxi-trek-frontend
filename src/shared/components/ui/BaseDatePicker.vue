@@ -4,30 +4,26 @@ import { Calendar } from '@/shadcn/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shadcn/ui/popover';
 import { cn } from '@/shadcn/utils';
 import type { DateValue } from '@internationalized/date';
-import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date';
+import { getLocalTimeZone, today } from '@internationalized/date';
 
 import { CalendarIcon } from '@lucide/vue';
+import dayjs from 'dayjs';
 import { ref, type HTMLAttributes, type Ref } from 'vue';
 
 interface Props {
   label?: string;
   placeholder?: string;
-  type?: 'email';
+  format?: string;
   class?: HTMLAttributes['class'];
 }
 const props = withDefaults(defineProps<Props>(), {
   placeholder: 'dd/mm/yyyy',
+  format: 'DD/MM/YY',
 });
 // const props = defineProps<Props>();
 
 const defaultPlaceholder = today(getLocalTimeZone());
 const date = ref() as Ref<DateValue>;
-
-const df = new DateFormatter('es-EC', {
-  day: '2-digit',
-  month: '2-digit',
-  year: '2-digit',
-});
 </script>
 
 <template>
@@ -44,7 +40,7 @@ const df = new DateFormatter('es-EC', {
             )
           "
         >
-          {{ date ? df.format(date.toDate(getLocalTimeZone())) : placeholder }}
+          {{ date ? dayjs(date.toDate(getLocalTimeZone())).format(props.format) : placeholder }}
           <CalendarIcon />
         </Button>
       </PopoverTrigger>
