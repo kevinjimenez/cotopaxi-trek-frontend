@@ -22,9 +22,9 @@ const onOpenChange = (isOpen: boolean) => {
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="onOpenChange">
+  <Dialog :open="open" @update:open="onOpenChange" class="">
     <DialogScrollContent
-      :class="cn('max-w-3xl', classContainer)"
+      :class="cn('max-w-3xl bg-white', classContainer)"
       :aria-describedby="description ? undefined : undefined"
     >
       <DialogTitle v-if="title">{{ title }}</DialogTitle>
