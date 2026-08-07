@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import InstagramIcon from '@/shared/components/icons/InstagramIcon.vue';
+import WhatsAppIcon from '@/shared/components/icons/WhatsAppIcon.vue';
 import BaseButton from '@/shared/components/ui/BaseButton.vue';
+import BaseInput from '@/shared/components/ui/BaseInput.vue';
 import BaseModal from '@/shared/components/ui/BaseModal.vue';
-import { BookUser, Plus, Shield } from '@lucide/vue';
-import { useGetCompanies } from '../actions/company.action';
+import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
+import { Plus } from '@lucide/vue';
 import { ref } from 'vue';
+import { useGetCompanies } from '../actions/company.action';
 
 const { data } = useGetCompanies();
 
@@ -29,8 +33,34 @@ const openModal = () => {
         @click="openModal()"
       />
       <BaseModal title="Nueva empresa" :open="open" @close="open = false">
-        <div class="flex flex-col w-full gap-y-5 bg-red-200">
-          <span> modal company </span>
+        <div class="flex flex-col w-full gap-y-5">
+          <div class="flex flex-row w-full gap-x-4 items-center justify-center">
+            <picture class="border rounded-xl overflow-hidden flex size-20">
+              <img
+                src="https://images.pexels.com/photos/35356461/pexels-photo-35356461.jpeg"
+                alt=""
+                class="w-full object-cover"
+              />
+            </picture>
+            <BaseInput label="nombre de la empresa" />
+          </div>
+
+          <div class="flex w-full gap-x-4">
+            <BaseInput label="whatsapp" />
+            <BaseInput label="instagram" />
+          </div>
+
+          <div class="flex w-full">
+            <div class="flex flex-col justify-center flex-1">
+              <h6 class="text-sm font-semibold">Empresa activa</h6>
+              <span class="text-xs text-muted-foreground">Oculta, sin acceso a la plataforma</span>
+            </div>
+            <BaseToggle />
+          </div>
+          <div class="flex w-full gap-x-2">
+            <BaseButton label="Cancelar" class="flex-1 border bg-white" variant="secondary" />
+            <BaseButton label="Guardar" class="flex-1" />
+          </div>
         </div>
       </BaseModal>
     </section>
@@ -51,11 +81,11 @@ const openModal = () => {
         </div>
         <div class="flex flex-col">
           <div class="flex items-center gap-x-1">
-            <BookUser class="text-muted-foreground" :size="12" />
+            <WhatsAppIcon class="size-3" />
             <span class="text-xs text-muted-foreground">{{ item.whatsapp }}</span>
           </div>
           <div class="flex items-center gap-x-1">
-            <Shield class="text-muted-foreground" :size="12" />
+            <InstagramIcon class="size-3" />
             <span class="text-xs text-muted-foreground">@{{ item.slug }}</span>
           </div>
         </div>
