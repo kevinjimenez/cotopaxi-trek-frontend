@@ -22,7 +22,7 @@ const onOpenChange = (isOpen: boolean) => {
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="onOpenChange" class="">
+  <Dialog :open="open" @update:open="onOpenChange">
     <DialogScrollContent
       :class="cn('max-w-3xl bg-white', classContainer)"
       :aria-describedby="description ? undefined : undefined"
