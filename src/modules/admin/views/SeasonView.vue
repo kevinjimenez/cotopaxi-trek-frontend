@@ -174,8 +174,13 @@ watch(
                 :label="fromNow(season.endDate).label"
               />
               <BaseBadge
-                class="bg-success/10 text-success text-[0.68rem] font-bold"
-                label="Activa"
+                :class="[
+                  'text-[0.68rem] font-bold',
+                  season.isCurrent
+                    ? 'bg-success/10 text-success'
+                    : 'bg-destructive/10 text-destructive',
+                ]"
+                :label="season.isCurrent ? 'Activa' : 'Inactiva'"
               />
               <BaseButton
                 class="text-[0.8rem] border bg-white"
