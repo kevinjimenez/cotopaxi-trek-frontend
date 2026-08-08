@@ -1,5 +1,6 @@
 import { gql } from '@/shared/services/graphql';
 import { useQuery } from '@tanstack/vue-query';
+import type { Ref } from 'vue';
 
 export interface Season {
   id: number;
@@ -47,8 +48,8 @@ export interface MountainResponse {
 }
 
 const LIST = `
-  query {
-      seasonsWithMountains {
+  query ($status: Boolean) {
+      seasonsWithMountains(status: $status) {
           id
           companyId
           name
@@ -69,17 +70,77 @@ const LIST = `
           }
       }
   }
-
 `;
+
+const ONE = `
+  query {
+      currentSeason {
+          id
+          name
+          isCurrent
+          seasonMountains {
+              sortOrder
+              startDate
+              endDate
+              price
+              mountain {
+                  id
+                  name
+                  # altitudeMeters
+              }
+          }
+      }
+  }
+  `;
 
 export const seasonKeys = {
   all: ['seasons_with_mountains'] as const,
+  current: ['seasons_with_mountains', 'current'] as const,
 };
 
-export const listSeasonsWithMountains = async () => {
+export const getSeasonCurrent = async () => {
+  const { currentSeason } = await gql<{
+    currentSeason: SeasonWithMountainsResponse;
+  }>(ONE);
+
+  const { seasonMountains, ...rest } = currentSeason;
+
+  if (seasonMountains.length !== 0) {
+    const mountains = seasonMountains.map((seasonMountain) => {
+      const { mountain, id, ...rest } = seasonMountain;
+      return { ...rest, seasonMountainId: id, id: mountain.id, name: mountain.name };
+    });
+    return { ...rest, mountains };
+  }
+
+  return { ...rest, mountains: [] };
+
+  // const newSeasonsWithMountains = seasonsWithMountains.map((seasonsWithMountain) => {
+  //   const { seasonMountains, ...rest } = seasonsWithMountain;
+  //   if (seasonMountains.length !== 0) {
+  //     const mountains = seasonMountains.map((seasonMountain) => {
+  //       const { mountain, id, ...rest } = seasonMountain;
+  //       return { ...rest, seasonMountainId: id, id: mountain.id, name: mountain.name };
+  //     });
+  //     return { ...rest, mountains };
+  //   }
+  //   return { ...rest, mountains: [] };
+  // });
+
+  // return newSeasonsWithMountains;
+};
+
+export const useGetSeasonCurrent = () => {
+  return useQuery({
+    queryKey: [...seasonKeys.current],
+    queryFn: () => getSeasonCurrent(),
+  });
+};
+
+export const listSeasonsWithMountains = async (status?: boolean) => {
   const { seasonsWithMountains } = await gql<{
     seasonsWithMountains: SeasonWithMountainsResponse[];
-  }>(LIST);
+  }>(LIST, { status });
 
   const newSeasonsWithMountains = seasonsWithMountains.map((seasonsWithMountain) => {
     const { seasonMountains, ...rest } = seasonsWithMountain;
@@ -96,9 +157,9 @@ export const listSeasonsWithMountains = async () => {
   return newSeasonsWithMountains;
 };
 
-export const useGetSeasonsWithMountains = () => {
+export const useGetSeasonsWithMountains = (status?: Ref<boolean | undefined>) => {
   return useQuery({
-    queryKey: seasonKeys.all,
-    queryFn: listSeasonsWithMountains,
+    queryKey: [...seasonKeys.all, status],
+    queryFn: () => listSeasonsWithMountains(status?.value),
   });
 };
