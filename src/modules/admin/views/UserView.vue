@@ -13,7 +13,7 @@ import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseTabs from '@/shared/components/ui/BaseTabs.vue';
 import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { formatDate, isAfterNow } from '@/shared/utils/date.utils';
-import { ChevronRight, Plus, X } from '@lucide/vue';
+import { ChevronRight, CircleCheck, Plus, X } from '@lucide/vue';
 import { ref, watch, type Ref } from 'vue';
 import { useGetSeasonCurrent, type Mountain } from '../actions/season.action';
 import { useGetUsersWithSeasons, type UserWithSeasons } from '../actions/user.action';
@@ -100,14 +100,10 @@ watch(
                 </div>
                 <BaseToggle />
               </div>
-              <div class="flex w-full gap-x-2">
-                <BaseButton label="Cancelar" class="flex-1 border bg-white" variant="secondary" />
-                <BaseButton label="Guardar" class="flex-1" />
-              </div>
             </div>
           </template>
           <template #season-mountains>
-            <div class="flex flex-col w-full gap-y-5 border p-4 rounded-lg">
+            <div class="flex flex-col w-full gap-y-5 p-4">
               <div class="flex flex-col gap-y-3">
                 <div class="flex flex-col">
                   <div class="flex gap-x-4 items-center">
@@ -119,15 +115,53 @@ watch(
                       class="bg-success/10 text-success text-[0.6rem] font-bold"
                     />
                   </div>
-                  <span class="text-muted-foreground text-xs"> 0 de 4 montañas contratadas </span>
+                  <span class="text-muted-foreground text-xs">
+                    {{ newMountains.length }} de {{ season?.mountains.length }} montañas contratadas
+                  </span>
                 </div>
-                <Progress :model-value="66" class="w-full" />
+                <Progress
+                  :model-value="(newMountains.length * 100) / (season?.mountains.length ?? 1)"
+                  class="w-full"
+                />
+              </div>
+
+              <!-- tomar -->
+              <div class="flex flex-col">
+                <span class="text-xs text-muted-foreground font-semibold uppercase"
+                  >Montañas disponible esta temporada</span
+                >
+                <div v-if="newMountains.length === season?.mountains.length">
+                  <BaseBadge
+                    :prefix-icon="CircleCheck"
+                    class="p-3 bg-success/10 text-success text-[0.68rem] font-semibold rounded-md"
+                    label="Ya se inscribió en todas las montañas disponibles en esta temporada."
+                  />
+                </div>
+                <div v-else class="flex flex-wrap gap-2">
+                  <div
+                    v-for="mountain in cloneMountains"
+                    :key="mountain.id"
+                    class="flex p-2 border border-primary border-dashed rounded-xl items-center justify-center gap-x-3 cursor-pointer"
+                    @click="addMountain(mountain.id)"
+                  >
+                    <div class="flex gap-x-2 items-center">
+                      <Plus class="size-3 text-primary" />
+                      <span class="text-xs font-semibold text-primary">
+                        {{ mountain.name }} - {{ formatDate(mountain.startDate) }}
+                      </span>
+                    </div>
+                    <BaseBadge
+                      label="Cierra en 3 días"
+                      class="bg-success/10 text-success text-[0.6rem] font-bold"
+                    />
+                  </div>
+                </div>
               </div>
 
               <!-- montañas -->
               <div class="flex flex-col">
                 <span class="text-xs text-muted-foreground font-semibold uppercase"
-                  >Contratadas</span
+                  >{{ newMountains.length }} montañas seleccionadas</span
                 >
                 <div
                   v-for="mountain in newMountains.sort((a, b) => a.sortOrder - b.sortOrder)"
@@ -151,35 +185,19 @@ watch(
                   />
                 </div>
               </div>
-
-              <!-- tomar -->
-              <div class="flex flex-col">
-                <span class="text-xs text-muted-foreground font-semibold uppercase"
-                  >Falta por tomar</span
-                >
-                <div class="flex flex-wrap gap-2">
-                  <div
-                    v-for="mountain in cloneMountains"
-                    :key="mountain.id"
-                    class="flex p-2 border border-primary border-dashed rounded-xl items-center justify-center gap-x-3 cursor-pointer"
-                    @click="addMountain(mountain.id)"
-                  >
-                    <div class="flex gap-x-2 items-center">
-                      <Plus class="size-3 text-primary" />
-                      <span class="text-xs font-semibold text-primary">
-                        {{ mountain.name }} - {{ formatDate(mountain.startDate) }}
-                      </span>
-                    </div>
-                    <BaseBadge
-                      label="Cierra en 3 días"
-                      class="bg-success/10 text-success text-[0.6rem] font-bold"
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
           </template>
         </BaseTabs>
+
+        <div class="flex w-full gap-x-2">
+          <BaseButton
+            label="Cancelar"
+            class="flex-1 border bg-white"
+            variant="secondary"
+            @click="open = false"
+          />
+          <BaseButton label="Guardar" class="flex-1" />
+        </div>
       </BaseModal>
     </section>
 
