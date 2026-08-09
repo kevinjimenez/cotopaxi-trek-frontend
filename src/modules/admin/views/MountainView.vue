@@ -86,7 +86,7 @@ const open = ref(false);
             <BaseToggle />
           </div>
           <div class="flex w-full gap-x-2">
-            <BaseButton label="Cancelar" class="flex-1 border bg-white" variant="secondary" />
+            <BaseButton label="Cancelar" class="flex-1 border bg-white" variant="secondary" @click="open = false" />
             <BaseButton label="Guardar" class="flex-1" />
           </div>
         </div>
