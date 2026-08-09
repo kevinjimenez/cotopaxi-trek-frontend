@@ -46,7 +46,6 @@ watch(
     immediate: true,
   },
 );
-
 </script>
 
 <template>
@@ -137,7 +136,12 @@ watch(
           </div>
 
           <div class="flex w-full gap-x-2">
-            <BaseButton label="Cancelar" class="flex-1 border bg-white" variant="secondary" />
+            <BaseButton
+              label="Cancelar"
+              class="flex-1 border bg-white"
+              variant="secondary"
+              @click="open = false"
+            />
             <BaseButton label="Guardar" class="flex-1" />
           </div>
         </div>
@@ -175,8 +179,13 @@ watch(
                 :label="fromNow(season.endDate).label"
               />
               <BaseBadge
-                class="bg-success/10 text-success text-[0.68rem] font-bold"
-                label="Activa"
+                :class="[
+                  'text-[0.68rem] font-bold',
+                  season.isCurrent
+                    ? 'bg-success/10 text-success'
+                    : 'bg-destructive/10 text-destructive',
+                ]"
+                :label="season.isCurrent ? 'Activa' : 'Inactiva'"
               />
               <BaseButton
                 class="text-[0.8rem] border bg-white"
