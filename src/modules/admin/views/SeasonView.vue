@@ -15,11 +15,11 @@ import { formatDate, fromNow } from '@/shared/utils/date.utils';
 import { ChevronRight, GripHorizontal, Plus, X } from '@lucide/vue';
 import { ref, watch, type Ref } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { useGetSeasonsWithMountains } from '../actions/season.action';
 import { useGetMountains } from '../queries/get-mountains.query';
+import { useGetSeasons } from '../queries/get-seasons.query';
 import type { MountainResponse } from '../types/api/response/mountain-response.type';
 
-const { data } = useGetSeasonsWithMountains();
+const { data } = useGetSeasons();
 const { data: mountains } = useGetMountains();
 
 const cloneMountains = ref<MountainResponse[]>([]);
