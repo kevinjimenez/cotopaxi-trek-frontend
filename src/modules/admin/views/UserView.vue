@@ -15,13 +15,14 @@ import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { formatDate, isAfterNow } from '@/shared/utils/date.utils';
 import { ChevronRight, CircleCheck, Plus, X } from '@lucide/vue';
 import { ref, watch, type Ref } from 'vue';
-import { useGetSeasonCurrent, type Mountain } from '../actions/season.action';
 import { useGetUsersWithSeasons, type UserWithSeasons } from '../actions/user.action';
+import { useGetSeason } from '../queries/get-season.query';
+import type { Mountain } from '../types/mountain.type';
 
-// const status = ref(true);
+const status = ref(true);
 
 const { data } = useGetUsersWithSeasons();
-const { data: season } = useGetSeasonCurrent();
+const { data: season } = useGetSeason(status);
 const open = ref(false);
 const tabs = [
   { tab: 'personal', name: 'Datos personales', default: true },
