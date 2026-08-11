@@ -6,13 +6,13 @@ import BaseInput from '@/shared/components/ui/BaseInput.vue';
 import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { Plus } from '@lucide/vue';
+import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import { ref } from 'vue';
+import { toast } from 'vue-sonner';
 import { useCreateCompany } from '../mutations/create-company.mutation';
 import { useGetCompanies } from '../queries/get-companies.query';
 import { companyFormSchema, type CompanyFormSchema } from '../schemas/company-form.schema';
-import { toTypedSchema } from '@vee-validate/zod';
-import { toast } from 'vue-sonner';
 
 const { data } = useGetCompanies();
 const { mutate: createCompany, isPending } = useCreateCompany();
@@ -44,40 +44,34 @@ const { handleSubmit, defineField, errors, resetForm } = useForm<CompanyFormSche
 const [name, nameAttrs] = defineField('name');
 const [slug, slugAttrs] = defineField('slug');
 const [whatsapp, whatsappAttrs] = defineField('whatsapp');
+const [instagram, instagramAttrs] = defineField('instagram');
 const [status, statusAttrs] = defineField('status');
 
 const onSubmit = handleSubmit(
-  async ({ name, slug, whatsapp, status }) => {
+  async (value) => {
     const companyToCreate = {
-      name,
-      slug,
-      whatsapp,
-      status,
+      ...value,
+      whatsapp: `${value.whatsapp.replace(/\s/g, '')}`,
     };
-    console.log({ companyToCreate });
     createCompany(companyToCreate, {
       onSuccess: () => {
         resetForm();
-        toast('Event has been created', {
-          description: 'Sunday, December 03, 2023 at 9:00 AM',
-          action: {
-            label: 'Undo',
-            onClick: () => console.log('Undo'),
-          },
+        toast.success('Empresa creada', {
+          position: 'top-right',
+          description: `${companyToCreate.name} ya está disponible en la plataforma.`,
         });
         open.value = false;
+      },
+      onError: (error) => {
+        toast.error('No se pudo crear la empresa', {
+          position: 'top-right',
+          description: error.message,
+        });
       },
     });
   },
   ({ errors }) => {
-    toast('Event has been created', {
-      description: 'Sunday, December 03, 2023 at 9:00 AM',
-      action: {
-        label: 'Undo',
-        onClick: () => console.log('Undo'),
-      },
-    });
-    console.log('validation failed', errors);
+    console.error('validation failed', errors);
   },
 );
 </script>
@@ -118,6 +112,7 @@ const onSubmit = handleSubmit(
                 v-bind="nameAttrs"
                 label="nombre de la empresa"
                 :error="errors.name"
+                helper-text="Ingrese el nombre de la empresa"
               />
               <BaseInput
                 required
@@ -125,6 +120,7 @@ const onSubmit = handleSubmit(
                 v-bind="slugAttrs"
                 label="slug"
                 :error="errors.slug"
+                helper-text="Ingrese el nombre de la slug"
               />
             </div>
           </div>
@@ -135,9 +131,16 @@ const onSubmit = handleSubmit(
               v-model="whatsapp"
               v-bind="whatsappAttrs"
               label="whatsapp"
+              mask="+593 ### ### ###"
               :error="errors.whatsapp"
+              helper-text="Ingrese el numero de whatsapp"
             />
-            <BaseInput label="instagram" />
+            <BaseInput
+              v-model="instagram"
+              v-bind="instagramAttrs"
+              label="instagram"
+              helper-text="Ingrese el instagram"
+            />
           </div>
 
           <div class="flex w-full">
@@ -159,7 +162,7 @@ const onSubmit = handleSubmit(
         </div>
       </BaseModal>
     </section>
-    <div class="grid grid-cols-3 gap-3 mt-5">
+    <div class="grid grid-cols-4 gap-4 mt-5">
       <div
         v-for="(item, index) in data"
         :key="index"
@@ -181,7 +184,7 @@ const onSubmit = handleSubmit(
           </div>
           <div class="flex items-center gap-x-1">
             <InstagramIcon class="size-3" />
-            <span class="text-xs text-muted-foreground">@{{ item.slug }}</span>
+            <span class="text-xs text-muted-foreground">@{{ item?.instagram || item.slug }}</span>
           </div>
         </div>
         <BaseButton label="Editar" variant="secondary" class="bg-white border" size="sm" />
