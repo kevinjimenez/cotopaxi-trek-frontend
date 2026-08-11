@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { ToggleGroup, ToggleGroupItem } from '@/shadcn/ui/toggle-group';
-import { ref } from 'vue';
+import { computed } from 'vue';
 
-const status = ref('active');
+const model = defineModel<boolean>({ default: true });
+
+const toggleValue = computed({
+  get: () => (model.value ? 'active' : 'inactive'),
+  set: (value: string) => {
+    model.value = value === 'active';
+  },
+});
 </script>
 
 <template>
-  <ToggleGroup v-model="status" type="single" :spacing="1" class="bg-muted rounded-lg p-1">
+  <ToggleGroup v-model="toggleValue" type="single" :spacing="1" class="bg-muted rounded-lg p-1">
     <ToggleGroupItem
       value="active"
       class="rounded-lg data-[state=on]:bg-white data-[state=on]:text-success"
