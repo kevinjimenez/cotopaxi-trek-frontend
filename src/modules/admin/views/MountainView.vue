@@ -2,13 +2,13 @@
 import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
 import BaseButton from '@/shared/components/ui/BaseButton.vue';
 import BaseDivider from '@/shared/components/ui/BaseDivider.vue';
-import { Plus } from '@lucide/vue';
-import { useGetMountains } from '../actions/mountain.action';
-import { ref } from 'vue';
-import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseInput from '@/shared/components/ui/BaseInput.vue';
+import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseTextarea from '@/shared/components/ui/BaseTextarea.vue';
 import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
+import { Plus } from '@lucide/vue';
+import { ref } from 'vue';
+import { useGetMountains } from '../queries/get-mountains.query';
 
 const { data } = useGetMountains();
 
@@ -86,7 +86,12 @@ const open = ref(false);
             <BaseToggle />
           </div>
           <div class="flex w-full gap-x-2">
-            <BaseButton label="Cancelar" class="flex-1 border bg-white" variant="secondary" @click="open = false" />
+            <BaseButton
+              label="Cancelar"
+              class="flex-1 border bg-white"
+              variant="secondary"
+              @click="open = false"
+            />
             <BaseButton label="Guardar" class="flex-1" />
           </div>
         </div>

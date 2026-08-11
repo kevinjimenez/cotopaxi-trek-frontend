@@ -59,7 +59,7 @@ const navLinkClass = (name: string) =>
           />
           <BaseButton
             :class="navLinkClass('user')"
-            label="usuarios"
+            label="Usuarios"
             variant="link"
             @click="() => goTo('user')"
           />

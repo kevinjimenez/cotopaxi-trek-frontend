@@ -15,16 +15,17 @@ import { formatDate, fromNow } from '@/shared/utils/date.utils';
 import { ChevronRight, GripHorizontal, Plus, X } from '@lucide/vue';
 import { ref, watch, type Ref } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { type Mountain, useGetMountains } from '../actions/mountain.action';
-import { useGetSeasonsWithMountains } from '../actions/season.action';
+import { useGetMountains } from '../queries/get-mountains.query';
+import { useGetSeasons } from '../queries/get-seasons.query';
+import type { MountainResponse } from '../types/api/response/mountain-response.type';
 
-const { data } = useGetSeasonsWithMountains();
+const { data } = useGetSeasons();
 const { data: mountains } = useGetMountains();
 
-const cloneMountains = ref<Mountain[]>([]);
-const newMountains = ref<Mountain[]>([]);
+const cloneMountains = ref<MountainResponse[]>([]);
+const newMountains = ref<MountainResponse[]>([]);
 
-const moveMountain = (id: string, from: Ref<Mountain[]>, to: Ref<Mountain[]>) => {
+const moveMountain = (id: string, from: Ref<MountainResponse[]>, to: Ref<MountainResponse[]>) => {
   const mountain = from.value.find((m) => m.id === id);
   if (!mountain) return;
   to.value = [...to.value, mountain];

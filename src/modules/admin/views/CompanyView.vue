@@ -7,7 +7,7 @@ import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { Plus } from '@lucide/vue';
 import { ref } from 'vue';
-import { useGetCompanies } from '../actions/company.action';
+import { useGetCompanies } from '../queries/get-companies.query';
 
 const { data } = useGetCompanies();
 
