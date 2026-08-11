@@ -9,10 +9,12 @@ import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { Plus } from '@lucide/vue';
 import { ref } from 'vue';
 import { useGetMountains } from '../queries/get-mountains.query';
+import BaseInputFile from '@/shared/components/ui/BaseInputFile.vue';
 
 const { data } = useGetMountains();
 
 const open = ref(false);
+const logoFile = ref<File>();
 </script>
 
 <template>
@@ -34,18 +36,19 @@ const open = ref(false);
       <BaseModal title="Nueva montaña" :open="open" @close="open = false">
         <div class="flex flex-col w-full gap-y-5">
           <div class="flex flex-row w-full gap-x-4">
-            <picture class="border rounded-xl overflow-hidden flex w-44 h-40">
+            <!-- <picture class="border rounded-xl overflow-hidden flex w-44 h-40">
               <img
                 src="https://images.pexels.com/photos/35356461/pexels-photo-35356461.jpeg"
                 alt=""
                 class="w-full object-cover"
               />
-            </picture>
+            </picture> -->
+            <BaseInputFile v-model="logoFile" class="w-40" />
             <div class="flex flex-col w-full justify-center flex-1 gap-y-4">
-              <BaseInput label="nombre" />
+              <BaseInput label="nombre" required />
               <div class="flex gap-x-4">
-                <BaseInput label="altitud" placeholder="ej. 5.897 mts" />
-                <BaseInput label="ubicacion" />
+                <BaseInput required label="altitud" placeholder="ej. 5.897 mts" />
+                <BaseInput required label="ubicacion" />
               </div>
             </div>
           </div>

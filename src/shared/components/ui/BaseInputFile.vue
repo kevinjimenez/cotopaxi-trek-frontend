@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, type HTMLAttributes } from 'vue';
 import { ImageIcon, X } from '@lucide/vue';
 import {
   Attachment,
@@ -11,6 +11,13 @@ import {
   AttachmentTitle,
   AttachmentTrigger,
 } from '@/shadcn/ui/attachment';
+import { cn } from '@/shadcn/utils';
+
+interface Props {
+  class?: HTMLAttributes['class'];
+}
+
+const props = defineProps<Props>()
 
 const fileInput = ref<HTMLInputElement>();
 const model = defineModel<File>();
@@ -35,7 +42,7 @@ const removeFile = () => {
 <template>
   <input ref="fileInput" type="file" accept="image/png" class="hidden" @change="onFileSelected" />
 
-  <Attachment :state="model ? 'done' : 'idle'" orientation="vertical" class="w-32">
+  <Attachment :state="model ? 'done' : 'idle'" orientation="vertical" :class="cn('w-32', props.class)">
     <AttachmentMedia :variant="previewUrl ? 'image' : 'icon'">
       <img v-if="previewUrl" :src="previewUrl" :alt="model?.name" />
       <ImageIcon v-else />
