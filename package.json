@@ -27,7 +27,7 @@
     "dayjs": "^1.11.21",
     "maska": "^3.2.0",
     "pinia": "^4.0.2",
-    "reka-ui": "^2.10.1",
+    "reka-ui": "^2.10.3",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
     "vee-validate": "4.15.1",
