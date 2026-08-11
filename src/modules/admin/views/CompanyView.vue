@@ -34,9 +34,9 @@ const { handleSubmit, defineField, errors, resetForm } = useForm<CompanyFormSche
     name: '',
     slug: '',
     whatsapp: '',
-    instagram: undefined,
-    logoUrl: undefined,
-    primaryColor: undefined,
+    instagram: '',
+    logoUrl: '',
+    primaryColor: '',
     status: true,
   },
 });
