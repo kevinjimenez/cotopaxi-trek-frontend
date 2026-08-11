@@ -13,11 +13,13 @@ import { toast } from 'vue-sonner';
 import { useCreateCompany } from '../mutations/create-company.mutation';
 import { useGetCompanies } from '../queries/get-companies.query';
 import { companyFormSchema, type CompanyFormSchema } from '../schemas/company-form.schema';
+import BaseInputFile from '@/shared/components/ui/BaseInputFile.vue';
 
 const { data } = useGetCompanies();
 const { mutate: createCompany, isPending } = useCreateCompany();
 
 const open = ref(false);
+const logoFile = ref<File>();
 
 const openModal = () => {
   resetForm();
@@ -98,13 +100,14 @@ const onSubmit = handleSubmit(
       >
         <div class="flex flex-col w-full gap-y-5">
           <div class="flex flex-row w-full gap-x-4 items-center">
-            <picture class="border rounded-xl overflow-hidden flex size-32">
+            <!-- <picture class="border rounded-xl overflow-hidden flex size-32">
               <img
                 src="https://images.pexels.com/photos/35356461/pexels-photo-35356461.jpeg"
                 alt=""
                 class="w-full object-cover"
               />
-            </picture>
+            </picture> -->
+            <BaseInputFile v-model="logoFile" />
             <div class="flex flex-col w-full gap-y-2">
               <BaseInput
                 required
