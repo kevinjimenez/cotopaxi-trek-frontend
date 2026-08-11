@@ -2,9 +2,9 @@ export interface CompanyResponse {
   id: string;
   name: string;
   whatsapp: string;
-  instagram: string | null;
-  status: boolean;
-  logoUrl: string | null;
   slug: string;
-  primaryColor: string | null;
+  instagram?: string | null;
+  logoUrl?: string | null;
+  primaryColor?: string | null;
+  status?: boolean | null;
 }
