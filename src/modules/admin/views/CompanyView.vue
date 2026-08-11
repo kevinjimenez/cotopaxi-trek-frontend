@@ -8,13 +8,30 @@ import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { Plus } from '@lucide/vue';
 import { ref } from 'vue';
 import { useGetCompanies } from '../queries/get-companies.query';
+import { useCreateCompany } from '../mutations/create-company.mutation';
 
 const { data } = useGetCompanies();
+const { mutate: createCompany, isPending } = useCreateCompany();
 
 const open = ref(false);
 
 const openModal = () => {
   open.value = true;
+};
+
+const onSave = () => {
+  createCompany(
+    {
+      name: 'kevorla',
+      slug: 'kevorla',
+      whatsapp: '+593998047440',
+    },
+    {
+      onSuccess: () => {
+        open.value = false;
+      },
+    },
+  );
 };
 </script>
 
@@ -32,17 +49,25 @@ const openModal = () => {
         icon-class="size-2.5"
         @click="openModal()"
       />
-      <BaseModal title="Nueva empresa" :open="open" @close="open = false">
+      <BaseModal
+        title="Nueva empresa"
+        :open="open"
+        @close="open = false"
+        class-container="max-w-[35rem]"
+      >
         <div class="flex flex-col w-full gap-y-5">
-          <div class="flex flex-row w-full gap-x-4 items-center justify-center">
-            <picture class="border rounded-xl overflow-hidden flex size-20">
+          <div class="flex flex-row w-full gap-x-4 items-center">
+            <picture class="border rounded-xl overflow-hidden flex size-32">
               <img
                 src="https://images.pexels.com/photos/35356461/pexels-photo-35356461.jpeg"
                 alt=""
                 class="w-full object-cover"
               />
             </picture>
-            <BaseInput label="nombre de la empresa" />
+            <div class="flex flex-col w-full gap-y-2">
+              <BaseInput label="nombre de la empresa" />
+              <BaseInput label="slug" />
+            </div>
           </div>
 
           <div class="flex w-full gap-x-4">
@@ -64,7 +89,7 @@ const openModal = () => {
               variant="secondary"
               @click="open = false"
             />
-            <BaseButton label="Guardar" class="flex-1" />
+            <BaseButton label="Guardar" class="flex-1" :loading="isPending" @click="onSave" />
           </div>
         </div>
       </BaseModal>
