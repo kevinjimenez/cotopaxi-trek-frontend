@@ -15,13 +15,14 @@ import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { formatDate, isAfterNow } from '@/shared/utils/date.utils';
 import { ChevronRight, CircleCheck, Plus, X } from '@lucide/vue';
 import { ref, watch, type Ref } from 'vue';
-import { useGetUsersWithSeasons, type UserWithSeasons } from '../actions/user.action';
 import { useGetSeason } from '../queries/get-season.query';
+import { useGetUsers } from '../queries/get-users.query';
+import type { UserResponse } from '../types/api/response/user-response.type';
 import type { Mountain } from '../types/mountain.type';
 
 const status = ref(true);
 
-const { data } = useGetUsersWithSeasons();
+const { data } = useGetUsers();
 const { data: season } = useGetSeason(status);
 const open = ref(false);
 const tabs = [
@@ -42,7 +43,7 @@ const moveMountain = (id: number, from: Ref<Mountain[]>, to: Ref<Mountain[]>) =>
 const addMountain = (id: number) => moveMountain(id, cloneMountains, newMountains);
 const removeMountain = (id: number) => moveMountain(id, newMountains, cloneMountains);
 
-const activeSeason = (item: UserWithSeasons) => item.userSeasons.find((e) => e.status);
+const activeSeason = (item: UserResponse) => item.userSeasons.find((e) => e.status);
 
 // watch(season, (value) => console.log({ season: value?.mountains }));
 watch(
