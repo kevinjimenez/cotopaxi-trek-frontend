@@ -5,6 +5,6 @@ import { VueQueryDevtools } from '@tanstack/vue-query-devtools';
 
 <template>
   <router-view />
-  <Toaster />
+  <Toaster rich-colors />
   <VueQueryDevtools />
 </template>
