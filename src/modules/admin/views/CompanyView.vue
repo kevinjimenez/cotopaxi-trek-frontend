@@ -6,9 +6,13 @@ import BaseInput from '@/shared/components/ui/BaseInput.vue';
 import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { Plus } from '@lucide/vue';
+import { useForm } from 'vee-validate';
 import { ref } from 'vue';
-import { useGetCompanies } from '../queries/get-companies.query';
 import { useCreateCompany } from '../mutations/create-company.mutation';
+import { useGetCompanies } from '../queries/get-companies.query';
+import { companyFormSchema, type CompanyFormSchema } from '../schemas/company-form.schema';
+import { toTypedSchema } from '@vee-validate/zod';
+import { toast } from 'vue-sonner';
 
 const { data } = useGetCompanies();
 const { mutate: createCompany, isPending } = useCreateCompany();
@@ -16,23 +20,66 @@ const { mutate: createCompany, isPending } = useCreateCompany();
 const open = ref(false);
 
 const openModal = () => {
+  resetForm();
   open.value = true;
 };
 
 const onSave = () => {
-  createCompany(
-    {
-      name: 'kevorla',
-      slug: 'kevorla',
-      whatsapp: '+593998047440',
-    },
-    {
+  onSubmit();
+};
+
+const { handleSubmit, defineField, errors, resetForm } = useForm<CompanyFormSchema>({
+  validationSchema: toTypedSchema(companyFormSchema),
+  initialValues: {
+    name: '',
+    slug: '',
+    whatsapp: '',
+    instagram: undefined,
+    logoUrl: undefined,
+    primaryColor: undefined,
+    status: true,
+  },
+});
+
+const [name, nameAttrs] = defineField('name');
+const [slug, slugAttrs] = defineField('slug');
+const [whatsapp, whatsappAttrs] = defineField('whatsapp');
+const [status, statusAttrs] = defineField('status');
+
+const onSubmit = handleSubmit(
+  async ({ name, slug, whatsapp, status }) => {
+    const companyToCreate = {
+      name,
+      slug,
+      whatsapp,
+      status,
+    };
+    console.log({ companyToCreate });
+    createCompany(companyToCreate, {
       onSuccess: () => {
+        resetForm();
+        toast('Event has been created', {
+          description: 'Sunday, December 03, 2023 at 9:00 AM',
+          action: {
+            label: 'Undo',
+            onClick: () => console.log('Undo'),
+          },
+        });
         open.value = false;
       },
-    },
-  );
-};
+    });
+  },
+  ({ errors }) => {
+    toast('Event has been created', {
+      description: 'Sunday, December 03, 2023 at 9:00 AM',
+      action: {
+        label: 'Undo',
+        onClick: () => console.log('Undo'),
+      },
+    });
+    console.log('validation failed', errors);
+  },
+);
 </script>
 
 <template>
@@ -65,13 +112,31 @@ const onSave = () => {
               />
             </picture>
             <div class="flex flex-col w-full gap-y-2">
-              <BaseInput label="nombre de la empresa" />
-              <BaseInput label="slug" />
+              <BaseInput
+                required
+                v-model="name"
+                v-bind="nameAttrs"
+                label="nombre de la empresa"
+                :error="errors.name"
+              />
+              <BaseInput
+                required
+                v-model="slug"
+                v-bind="slugAttrs"
+                label="slug"
+                :error="errors.slug"
+              />
             </div>
           </div>
 
           <div class="flex w-full gap-x-4">
-            <BaseInput label="whatsapp" />
+            <BaseInput
+              required
+              v-model="whatsapp"
+              v-bind="whatsappAttrs"
+              label="whatsapp"
+              :error="errors.whatsapp"
+            />
             <BaseInput label="instagram" />
           </div>
 
@@ -80,7 +145,7 @@ const onSave = () => {
               <h6 class="text-sm font-semibold">Empresa activa</h6>
               <span class="text-xs text-muted-foreground">Oculta, sin acceso a la plataforma</span>
             </div>
-            <BaseToggle />
+            <BaseToggle v-model="status" v-bind="statusAttrs" />
           </div>
           <div class="flex w-full gap-x-2">
             <BaseButton
