@@ -2,19 +2,21 @@
 import {
   InputGroup,
   InputGroupAddon,
+  InputGroupButton,
   InputGroupInput,
   InputGroupText,
 } from '@/shadcn/ui/input-group';
 import { cn } from '@/shadcn/utils';
-import type { LucideIcon } from '@lucide/vue';
+import { Eye, EyeOff, type LucideIcon } from '@lucide/vue';
 import type { HTMLAttributes } from 'vue';
+import { computed, ref } from 'vue';
 import { vMaska } from 'maska/vue';
 import type { MaskInputOptions } from 'maska';
 
 interface Props {
   label?: string;
   placeholder?: string;
-  type?: 'email' | 'number';
+  type?: 'email' | 'number' | 'password';
   prefix?: string;
   prefixIcon?: LucideIcon;
   suffix?: string;
@@ -30,6 +32,13 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<Props>();
 const model = defineModel<string>();
+
+const showPassword = ref(false);
+
+const inputType = computed(() => {
+  if (props.type !== 'password') return props.type;
+  return showPassword.value ? 'text' : 'password';
+});
 </script>
 
 <template>
@@ -48,15 +57,24 @@ const model = defineModel<string>();
       </InputGroupAddon>
 
       <InputGroupInput
-        :type="type"
+        :type="inputType"
         :placeholder="placeholder"
         v-model="model"
         v-bind="$attrs"
         v-maska="mask"
       />
 
-      <InputGroupAddon v-if="suffixIcon || suffix" align="inline-end">
-        <component :is="suffixIcon" v-if="suffixIcon" class="size-4" />
+      <InputGroupAddon v-if="type === 'password' || suffixIcon || suffix" align="inline-end">
+        <InputGroupButton
+          v-if="type === 'password'"
+          type="button"
+          size="icon-xs"
+          aria-label="Mostrar u ocultar contraseña"
+          @click="showPassword = !showPassword"
+        >
+          <component :is="showPassword ? EyeOff : Eye" class="size-4" />
+        </InputGroupButton>
+        <component :is="suffixIcon" v-else-if="suffixIcon" class="size-4" />
         <InputGroupText v-else>{{ suffix }}</InputGroupText>
       </InputGroupAddon>
     </InputGroup>
