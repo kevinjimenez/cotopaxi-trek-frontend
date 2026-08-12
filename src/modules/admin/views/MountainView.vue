@@ -7,14 +7,80 @@ import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseTextarea from '@/shared/components/ui/BaseTextarea.vue';
 import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { Plus } from '@lucide/vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useGetMountains } from '../queries/get-mountains.query';
 import BaseInputFile from '@/shared/components/ui/BaseInputFile.vue';
+import { useForm } from 'vee-validate';
+import { mountainFormSchema, type MountainFormSchema } from '../schemas/mountain-form.schema';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useCreateMountain } from '../mutations/create-mountain.mutation';
+import { toast } from 'vue-sonner';
 
 const { data } = useGetMountains();
+const { mutate: createMountain, isPending } = useCreateMountain();
 
 const open = ref(false);
 const logoFile = ref<File>();
+
+const { handleSubmit, defineField, errors, resetForm } = useForm<MountainFormSchema>({
+  validationSchema: toTypedSchema(mountainFormSchema),
+  initialValues: {
+    companyId: '019ff298-3573-70ff-a00a-65bcdfe4267c',
+    name: '',
+    altitudeMeters: '' as unknown as number,
+    location: '',
+    status: true,
+  },
+});
+
+const onSave = () => {
+  onSubmit();
+};
+
+const [name, nameAttrs] = defineField('name');
+const [altitudeMeters, altitudeMetersAttrs] = defineField('altitudeMeters');
+const [location, locationAttrs] = defineField('location');
+const [status, statusAttrs] = defineField('status');
+
+const altitudeMetersInput = computed({
+  get: () => altitudeMeters.value?.toString() ?? '',
+  set: (value: string) => {
+    altitudeMeters.value = Number(value);
+  },
+});
+
+const openModal = () => {
+  resetForm();
+  open.value = true;
+};
+
+const onSubmit = handleSubmit(
+  async (value) => {
+    console.log({ value });
+    const mountainToCreate = {
+      ...value,
+    };
+    createMountain(mountainToCreate, {
+      onSuccess: () => {
+        resetForm();
+        toast.success('Montaña creada', {
+          position: 'top-right',
+          description: `${mountainToCreate.name} ya está disponible en la plataforma.`,
+        });
+        open.value = false;
+      },
+      onError: (error) => {
+        toast.error('No se pudo crear la montaña', {
+          position: 'top-right',
+          description: error.message,
+        });
+      },
+    });
+  },
+  ({ errors }) => {
+    console.error('validation failed', errors);
+  },
+);
 </script>
 
 <template>
@@ -31,7 +97,7 @@ const logoFile = ref<File>();
         label="Nueva montaña"
         :prefix-icon="Plus"
         icon-class="size-2.5"
-        @click="open = true"
+        @click="openModal()"
       />
       <BaseModal title="Nueva montaña" :open="open" @close="open = false">
         <div class="flex flex-col w-full gap-y-5">
@@ -45,10 +111,33 @@ const logoFile = ref<File>();
             </picture> -->
             <BaseInputFile v-model="logoFile" class="w-40" />
             <div class="flex flex-col w-full justify-center flex-1 gap-y-4">
-              <BaseInput label="nombre" required />
+              <BaseInput
+                label="nombre"
+                helper-text="Ingrese el nombre de la montaña"
+                v-model="name"
+                v-bind="nameAttrs"
+                :error="errors.name"
+                required
+              />
               <div class="flex gap-x-4">
-                <BaseInput required label="altitud" placeholder="ej. 5.897 mts" />
-                <BaseInput required label="ubicacion" />
+                <BaseInput
+                  type="number"
+                  label="altitud"
+                  placeholder="ej. 5.897 mts"
+                  helper-text="Ingrese la altitud de la montaña"
+                  v-model="altitudeMetersInput"
+                  v-bind="altitudeMetersAttrs"
+                  :error="errors.altitudeMeters"
+                  required
+                />
+                <BaseInput
+                  label="ubicacion"
+                  helper-text="Ingrese la ubicación de la montaña"
+                  v-model="location"
+                  v-bind="locationAttrs"
+                  :error="errors.location"
+                  required
+                />
               </div>
             </div>
           </div>
@@ -86,7 +175,7 @@ const logoFile = ref<File>();
               <h6 class="text-sm font-semibold">Montaña activa</h6>
               <span class="text-xs text-muted-foreground">Visible en el catálogo de la app.</span>
             </div>
-            <BaseToggle />
+            <BaseToggle v-model="status" v-bind="statusAttrs" />
           </div>
           <div class="flex w-full gap-x-2">
             <BaseButton
@@ -95,7 +184,7 @@ const logoFile = ref<File>();
               variant="secondary"
               @click="open = false"
             />
-            <BaseButton label="Guardar" class="flex-1" />
+            <BaseButton label="Guardar" class="flex-1" :loading="isPending" @click="onSave" />
           </div>
         </div>
       </BaseModal>
@@ -117,8 +206,14 @@ const logoFile = ref<File>();
 
           <div class="flex items-center gap-x-2.5">
             <BaseBadge
-              class="bg-success/10 text-success text-[0.68rem] font-semibold"
-              label="Activa"
+              :class="[
+                'text-[0.68rem] font-semibold',
+                {
+                  'bg-success/10 text-success': item.status,
+                  'bg-destructive/10 text-destructive': !item.status,
+                },
+              ]"
+              :label="item.status ? 'Activo' : 'Inactivo'"
             />
             <BaseButton class="text-[0.8rem] border bg-white" variant="secondary" label="Editar" />
           </div>
