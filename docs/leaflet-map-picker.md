@@ -65,35 +65,23 @@ Mapa interactivo: click para poner/mover el marker, emite las coords via
 de trabajo.
 
 ```vue
-<!-- src/shared/components/ui/MapPicker.vue -->
+<!-- src/shared/components/MapPicker.vue -->
 <script setup lang="ts">
 import { LMap, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import type { LeafletMouseEvent } from 'leaflet';
 import { ref, watch } from 'vue';
 
-interface Props {
-  latitude?: number | null;
-  longitude?: number | null;
-}
+const latitude = defineModel<number | null>('latitude', { default: null });
+const longitude = defineModel<number | null>('longitude', { default: null });
 
-const props = withDefaults(defineProps<Props>(), {
-  latitude: null,
-  longitude: null,
-});
-
-const emit = defineEmits<{
-  'update:latitude': [value: number];
-  'update:longitude': [value: number];
-}>();
-
-const DEFAULT_CENTER: [number, number] = [-0.68582, -78.438128]; // Cotopaxi
+const DEFAULT_CENTER: [number, number] = [-0.1807, -78.4678]; // Quito
 
 const marker = ref<[number, number]>(
-  props.latitude && props.longitude ? [props.latitude, props.longitude] : DEFAULT_CENTER,
+  latitude.value && longitude.value ? [latitude.value, longitude.value] : DEFAULT_CENTER,
 );
 
 watch(
-  () => [props.latitude, props.longitude],
+  () => [latitude.value, longitude.value],
   ([lat, lng]) => {
     if (lat && lng) marker.value = [lat, lng];
   },
@@ -102,8 +90,8 @@ watch(
 const onMapClick = (event: LeafletMouseEvent) => {
   const { lat, lng } = event.latlng;
   marker.value = [lat, lng];
-  emit('update:latitude', lat);
-  emit('update:longitude', lng);
+  latitude.value = lat;
+  longitude.value = lng;
 };
 </script>
 
@@ -121,16 +109,19 @@ const onMapClick = (event: LeafletMouseEvent) => {
 ```
 
 **Por qué `v-model` doble (`latitude`/`longitude` por separado)**: son dos campos
-independientes en el formulario/DTO del backend, así que se emiten como dos
-eventos `update:*` en vez de forzar un objeto `{ lat, lng }` que luego habría
-que desestructurar igual.
+independientes en el formulario/DTO del backend, así que se usan dos
+`defineModel` con nombre (`'latitude'`, `'longitude'`) en vez de forzar un
+objeto `{ lat, lng }` que luego habría que desestructurar igual. Cada
+`defineModel(name, ...)` genera automáticamente el par prop/emit
+(`latitude` / `update:latitude`) — no hace falta declarar `defineProps`/
+`defineEmits` a mano.
 
 ## 5. Uso en el formulario de "Nueva montaña"
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import MapPicker from '@/shared/components/ui/MapPicker.vue';
+import MapPicker from '@/shared/components/MapPicker.vue';
 
 const latitude = ref<number | null>(null);
 const longitude = ref<number | null>(null);

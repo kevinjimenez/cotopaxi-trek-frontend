@@ -13,7 +13,10 @@ interface Props {
   class?: HTMLAttributes['class'];
 }
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<Props>();
+const model = defineModel<string>();
 </script>
 <template>
   <div :class="cn('grid w-full items-center', props.class)">
@@ -24,7 +27,7 @@ const props = defineProps<Props>();
       </label>
       <span v-if="description" class="text-muted-foreground text-xs">{{ description }}</span>
     </div>
-    <Textarea :placeholder="placeholder" />
+    <Textarea v-model="model" :placeholder="placeholder" v-bind="$attrs" />
     <p
       v-if="helperText && !error"
       class="text-[0.7rem] font-medium mt-0.5 text-muted-foreground/80"

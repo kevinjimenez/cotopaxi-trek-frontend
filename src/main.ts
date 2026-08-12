@@ -1,5 +1,7 @@
-import './assets/main.css';
+import 'leaflet/dist/leaflet.css';
 import 'vue-sonner/style.css';
+import './assets/main.css';
+import './shared/lib/leaflet-icon-fix';
 
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
