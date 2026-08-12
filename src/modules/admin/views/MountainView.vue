@@ -7,6 +7,7 @@ import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseTextarea from '@/shared/components/ui/BaseTextarea.vue';
 import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { Plus } from '@lucide/vue';
+import { watchDebounced } from '@vueuse/core';
 import { computed, ref } from 'vue';
 import { useGetMountains } from '../queries/get-mountains.query';
 import BaseInputFile from '@/shared/components/ui/BaseInputFile.vue';
@@ -15,12 +16,16 @@ import { mountainFormSchema, type MountainFormSchema } from '../schemas/mountain
 import { toTypedSchema } from '@vee-validate/zod';
 import { useCreateMountain } from '../mutations/create-mountain.mutation';
 import { toast } from 'vue-sonner';
+import MapPicker from '@/shared/components/MapPicker.vue';
+import { forwardGeocode } from '@/shared/services/nominatim.service';
 
 const { data } = useGetMountains();
 const { mutate: createMountain, isPending } = useCreateMountain();
 
 const open = ref(false);
 const logoFile = ref<File>();
+const latitude = ref<number | null>(null);
+const longitude = ref<number | null>(null);
 
 const { handleSubmit, defineField, errors, resetForm } = useForm<MountainFormSchema>({
   validationSchema: toTypedSchema(mountainFormSchema),
@@ -29,6 +34,8 @@ const { handleSubmit, defineField, errors, resetForm } = useForm<MountainFormSch
     name: '',
     altitudeMeters: '' as unknown as number,
     location: '',
+    generalDescription: '',
+    technicalDescription: '',
     status: true,
   },
 });
@@ -40,6 +47,8 @@ const onSave = () => {
 const [name, nameAttrs] = defineField('name');
 const [altitudeMeters, altitudeMetersAttrs] = defineField('altitudeMeters');
 const [location, locationAttrs] = defineField('location');
+const [general, generalAttrs] = defineField('generalDescription');
+const [technical, technicalAttrs] = defineField('technicalDescription');
 const [status, statusAttrs] = defineField('status');
 
 const altitudeMetersInput = computed({
@@ -56,10 +65,12 @@ const openModal = () => {
 
 const onSubmit = handleSubmit(
   async (value) => {
-    console.log({ value });
     const mountainToCreate = {
       ...value,
+      latitude: latitude.value !== null ? Number(latitude.value.toFixed(6)) : undefined,
+      longitude: longitude.value !== null ? Number(longitude.value.toFixed(6)) : undefined,
     };
+    console.log({ mountainToCreate, rawLatitude: latitude.value, rawLongitude: longitude.value });
     createMountain(mountainToCreate, {
       onSuccess: () => {
         resetForm();
@@ -80,6 +91,19 @@ const onSubmit = handleSubmit(
   ({ errors }) => {
     console.error('validation failed', errors);
   },
+);
+
+watchDebounced(
+  () => location.value,
+  async (value) => {
+    if (!value) return;
+    const result = await forwardGeocode(value);
+    if (result) {
+      latitude.value = result.lat;
+      longitude.value = result.lng;
+    }
+  },
+  { debounce: 800 },
 );
 </script>
 
@@ -130,14 +154,14 @@ const onSubmit = handleSubmit(
                   :error="errors.altitudeMeters"
                   required
                 />
-                <BaseInput
+                <!-- <BaseInput
                   label="ubicacion"
                   helper-text="Ingrese la ubicación de la montaña"
                   v-model="location"
                   v-bind="locationAttrs"
                   :error="errors.location"
                   required
-                />
+                /> -->
               </div>
             </div>
           </div>
@@ -146,26 +170,38 @@ const onSubmit = handleSubmit(
             <span class="uppercase text-xs font-bold"> Ubicacion y mapa </span>
             <div class="flex flex-col w-full gap-y-4">
               <BaseInput
-                label="direccion"
+                label="Ubicación"
                 placeholder="Referencia o direccione exacta del acceso"
+                helper-text="Ingrese la ubicación de la montaña"
+                v-model="location"
+                v-bind="locationAttrs"
+                :error="errors.location"
+                required
               />
-              <picture class="border rounded-xl overflow-hidden flex h-40">
-                <img
-                  src="https://images.pexels.com/photos/4611591/pexels-photo-4611591.jpeg"
-                  alt=""
-                  class="w-full object-cover"
-                />
-              </picture>
+              <MapPicker v-model:latitude="latitude" v-model:longitude="longitude" />
+
+              <!-- <p class="text-xs text-muted-foreground">
+                {{ latitude?.toFixed(6) }}, {{ longitude?.toFixed(6) }}
+              </p> -->
             </div>
           </div>
           <BaseDivider />
           <div class="flex flex-col w-full gap-y-4">
             <span class="uppercase text-xs font-bold"> Descripcion </span>
             <div class="flex w-full gap-x-4 items-center justify-center">
-              <BaseTextarea label="general" />
+              <BaseTextarea
+                label="general"
+                helper-text="Ingrese una descripcion general para el publico"
+                v-model="general"
+                v-bind="generalAttrs"
+                :error="errors.generalDescription"
+              />
               <BaseTextarea
                 label="tecnica"
                 description="Dificultad, equipo y detalles de la ascensión"
+                v-model="technical"
+                v-bind="technicalAttrs"
+                :error="errors.technicalDescription"
               />
             </div>
           </div>
