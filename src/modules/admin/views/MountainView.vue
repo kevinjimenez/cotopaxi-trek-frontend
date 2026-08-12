@@ -133,7 +133,7 @@ watchDebounced(
                 class="w-full object-cover"
               />
             </picture> -->
-            <BaseInputFile v-model="logoFile" class="w-40" />
+            <BaseInputFile v-model="logoFile" class="w-40 min-w-40" />
             <div class="flex flex-col w-full justify-center flex-1 gap-y-4">
               <BaseInput
                 label="nombre"

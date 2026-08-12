@@ -87,7 +87,7 @@ watch(
             <span class="text-[0.7rem] uppercase text-muted-foreground font-semibold"
               >disponibles - toca para agregar</span
             >
-            <div class="flex flex-wrap gap-x-2">
+            <div class="flex flex-wrap gap-2">
               <div
                 v-for="mountain in cloneMountains"
                 :key="mountain.id"
