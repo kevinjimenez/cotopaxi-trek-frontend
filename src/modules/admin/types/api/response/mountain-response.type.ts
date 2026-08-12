@@ -3,4 +3,5 @@ export interface MountainResponse {
   name: string;
   location: string;
   altitudeMeters: string;
+  status: boolean;
 }

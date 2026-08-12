@@ -26,6 +26,7 @@ const onOpenChange = (isOpen: boolean) => {
     <DialogScrollContent
       :class="cn('max-w-3xl bg-white', classContainer)"
       :aria-describedby="description ? undefined : undefined"
+      @pointer-down-outside="(event) => event.preventDefault()"
     >
       <DialogTitle v-if="title">{{ title }}</DialogTitle>
       <VisuallyHidden v-else as-child>

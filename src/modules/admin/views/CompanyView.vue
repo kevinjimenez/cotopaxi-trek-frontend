@@ -6,16 +6,76 @@ import BaseInput from '@/shared/components/ui/BaseInput.vue';
 import BaseModal from '@/shared/components/ui/BaseModal.vue';
 import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
 import { Plus } from '@lucide/vue';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
 import { ref } from 'vue';
+import { toast } from 'vue-sonner';
+import { useCreateCompany } from '../mutations/create-company.mutation';
 import { useGetCompanies } from '../queries/get-companies.query';
+import { companyFormSchema, type CompanyFormSchema } from '../schemas/company-form.schema';
+import BaseInputFile from '@/shared/components/ui/BaseInputFile.vue';
 
 const { data } = useGetCompanies();
+const { mutate: createCompany, isPending } = useCreateCompany();
 
 const open = ref(false);
+const logoFile = ref<File>();
 
 const openModal = () => {
+  resetForm();
   open.value = true;
 };
+
+const onSave = () => {
+  onSubmit();
+};
+
+const { handleSubmit, defineField, errors, resetForm } = useForm<CompanyFormSchema>({
+  validationSchema: toTypedSchema(companyFormSchema),
+  initialValues: {
+    name: '',
+    slug: '',
+    whatsapp: '',
+    instagram: '',
+    logoUrl: '',
+    primaryColor: '',
+    status: true,
+  },
+});
+
+const [name, nameAttrs] = defineField('name');
+const [slug, slugAttrs] = defineField('slug');
+const [whatsapp, whatsappAttrs] = defineField('whatsapp');
+const [instagram, instagramAttrs] = defineField('instagram');
+const [status, statusAttrs] = defineField('status');
+
+const onSubmit = handleSubmit(
+  async (value) => {
+    const companyToCreate = {
+      ...value,
+      whatsapp: `${value.whatsapp.replace(/\s/g, '')}`,
+    };
+    createCompany(companyToCreate, {
+      onSuccess: () => {
+        resetForm();
+        toast.success('Empresa creada', {
+          position: 'top-right',
+          description: `${companyToCreate.name} ya está disponible en la plataforma.`,
+        });
+        open.value = false;
+      },
+      onError: (error) => {
+        toast.error('No se pudo crear la empresa', {
+          position: 'top-right',
+          description: error.message,
+        });
+      },
+    });
+  },
+  ({ errors }) => {
+    console.error('validation failed', errors);
+  },
+);
 </script>
 
 <template>
@@ -32,22 +92,58 @@ const openModal = () => {
         icon-class="size-2.5"
         @click="openModal()"
       />
-      <BaseModal title="Nueva empresa" :open="open" @close="open = false">
+      <BaseModal
+        title="Nueva empresa"
+        :open="open"
+        @close="open = false"
+        class-container="max-w-[35rem]"
+      >
         <div class="flex flex-col w-full gap-y-5">
-          <div class="flex flex-row w-full gap-x-4 items-center justify-center">
-            <picture class="border rounded-xl overflow-hidden flex size-20">
+          <div class="flex flex-row w-full gap-x-4 items-center">
+            <!-- <picture class="border rounded-xl overflow-hidden flex size-32">
               <img
                 src="https://images.pexels.com/photos/35356461/pexels-photo-35356461.jpeg"
                 alt=""
                 class="w-full object-cover"
               />
-            </picture>
-            <BaseInput label="nombre de la empresa" />
+            </picture> -->
+            <BaseInputFile v-model="logoFile" />
+            <div class="flex flex-col w-full gap-y-2">
+              <BaseInput
+                label="nombre de la empresa"
+                helper-text="Ingrese el nombre de la empresa"
+                v-model="name"
+                v-bind="nameAttrs"
+                :error="errors.name"
+                required
+              />
+              <BaseInput
+                required
+                v-model="slug"
+                v-bind="slugAttrs"
+                label="slug"
+                :error="errors.slug"
+                helper-text="Ingrese el nombre de la slug"
+              />
+            </div>
           </div>
 
           <div class="flex w-full gap-x-4">
-            <BaseInput label="whatsapp" />
-            <BaseInput label="instagram" />
+            <BaseInput
+              required
+              v-model="whatsapp"
+              v-bind="whatsappAttrs"
+              label="whatsapp"
+              mask="+593 ### ### ###"
+              :error="errors.whatsapp"
+              helper-text="Ingrese el numero de whatsapp"
+            />
+            <BaseInput
+              v-model="instagram"
+              v-bind="instagramAttrs"
+              label="instagram"
+              helper-text="Ingrese el instagram"
+            />
           </div>
 
           <div class="flex w-full">
@@ -55,7 +151,7 @@ const openModal = () => {
               <h6 class="text-sm font-semibold">Empresa activa</h6>
               <span class="text-xs text-muted-foreground">Oculta, sin acceso a la plataforma</span>
             </div>
-            <BaseToggle />
+            <BaseToggle v-model="status" v-bind="statusAttrs" />
           </div>
           <div class="flex w-full gap-x-2">
             <BaseButton
@@ -64,12 +160,12 @@ const openModal = () => {
               variant="secondary"
               @click="open = false"
             />
-            <BaseButton label="Guardar" class="flex-1" />
+            <BaseButton label="Guardar" class="flex-1" :loading="isPending" @click="onSave" />
           </div>
         </div>
       </BaseModal>
     </section>
-    <div class="grid grid-cols-3 gap-3 mt-5">
+    <div class="grid grid-cols-4 gap-4 mt-5">
       <div
         v-for="(item, index) in data"
         :key="index"
@@ -91,7 +187,7 @@ const openModal = () => {
           </div>
           <div class="flex items-center gap-x-1">
             <InstagramIcon class="size-3" />
-            <span class="text-xs text-muted-foreground">@{{ item.slug }}</span>
+            <span class="text-xs text-muted-foreground">@{{ item?.instagram || item.slug }}</span>
           </div>
         </div>
         <BaseButton label="Editar" variant="secondary" class="bg-white border" size="sm" />
