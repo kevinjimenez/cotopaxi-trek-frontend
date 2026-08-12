@@ -11,6 +11,7 @@ const GET_SEASON_QUERY = `
           name
           isCurrent
           seasonMountains {
+              id
               sortOrder
               startDate
               endDate
