@@ -110,12 +110,12 @@ const onSubmit = handleSubmit(
             <BaseInputFile v-model="logoFile" />
             <div class="flex flex-col w-full gap-y-2">
               <BaseInput
-                required
+                label="nombre de la empresa"
+                helper-text="Ingrese el nombre de la empresa"
                 v-model="name"
                 v-bind="nameAttrs"
-                label="nombre de la empresa"
                 :error="errors.name"
-                helper-text="Ingrese el nombre de la empresa"
+                required
               />
               <BaseInput
                 required

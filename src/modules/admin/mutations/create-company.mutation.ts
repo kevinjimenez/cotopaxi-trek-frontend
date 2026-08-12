@@ -29,7 +29,6 @@ export const useCreateCompany = () => {
   return useMutation({
     mutationFn: createCompany,
     onSuccess: async (newCompany) => {
-      console.log('useCreateCompany', { newCompany });
       queryClient.setQueryData<CompanyResponse[]>(companyKeys.all, (old) =>
         old ? [...old, newCompany] : [newCompany],
       );
