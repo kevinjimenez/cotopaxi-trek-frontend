@@ -12,12 +12,48 @@ const CREATE_USER_MUTATION = `
       lastname
       username
       phone
+      status
       userSeasons {
         id
         status
         season {
           id
           name
+          year
+          isCurrent
+          seasonMountains {
+            id
+            sortOrder
+            price
+            startDate
+            endDate
+            mountain {
+              id
+              name
+            }
+          }
+        }
+      }
+      bookings {
+        id
+        status
+        bookedAt
+        seasonMountain {
+          id
+          sortOrder
+          price
+          startDate
+          endDate
+          season {
+            id
+            name
+            year
+            isCurrent
+          }
+          mountain {
+            id
+            name
+          }
         }
       }
     }

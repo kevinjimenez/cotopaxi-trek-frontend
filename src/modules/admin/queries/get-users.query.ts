@@ -11,6 +11,7 @@ const GET_USERS_QUERY = `
           lastname
           username
           phone
+          status
           userSeasons {
               id
               status
@@ -29,6 +30,28 @@ const GET_USERS_QUERY = `
                           id
                           name
                       }
+                  }
+              }
+          }
+          bookings {
+              id
+              status
+              bookedAt
+              seasonMountain {
+                  id
+                  sortOrder
+                  price
+                  startDate
+                  endDate
+                  season {
+                      id
+                      name
+                      year
+                      isCurrent
+                  }
+                  mountain {
+                      id
+                      name
                   }
               }
           }
