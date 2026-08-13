@@ -21,17 +21,6 @@ const CREATE_USER_MUTATION = `
           name
           year
           isCurrent
-          seasonMountains {
-            id
-            sortOrder
-            price
-            startDate
-            endDate
-            mountain {
-              id
-              name
-            }
-          }
         }
       }
       bookings {
@@ -44,12 +33,6 @@ const CREATE_USER_MUTATION = `
           price
           startDate
           endDate
-          season {
-            id
-            name
-            year
-            isCurrent
-          }
           mountain {
             id
             name

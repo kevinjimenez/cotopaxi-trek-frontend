@@ -13,13 +13,5 @@ export interface BookingSeasonMountainResponse {
   price: number;
   startDate: Date;
   endDate?: Date;
-  season: BookingSeasonResponse;
   mountain: Mountain;
-}
-
-export interface BookingSeasonResponse {
-  id: number;
-  name: string;
-  year: number;
-  isCurrent: boolean;
 }

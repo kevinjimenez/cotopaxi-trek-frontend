@@ -336,11 +336,7 @@ watch(
                 <p class="text-xs text-muted-foreground">@{{ item.username }}</p>
                 <div class="size-1 bg-muted-foreground rounded-full" />
                 <p class="text-xs text-muted-foreground">
-                  {{
-                    item.userSeasons.find((userSeason) => {
-                      return userSeason.status;
-                    })?.season.seasonMountains.length ?? 0
-                  }}
+                  {{ item.bookings.length }}
                   Montañas
                 </p>
               </div>
@@ -379,9 +375,7 @@ watch(
           </div>
         </AccordionTrigger>
         <AccordionContent>
-          <template
-            v-if="!activeSeason(item) || activeSeason(item)?.season.seasonMountains.length === 0"
-          >
+          <template v-if="item.bookings.length === 0">
             <div class="w-full flex pl-12 pt-2">
               <span class="text-muted-foreground/65 text-xs italic"
                 >No está inscrit@ en la temporada activa.</span
@@ -395,29 +389,31 @@ watch(
                 activeSeason(item)?.season.name
               }}</span>
               <div
-                v-for="(userSeason, i) in activeSeason(item)?.season.seasonMountains"
+                v-for="(booking, i) in item.bookings"
                 :key="i"
                 class="flex w-full border my-2 rounded-sm p-2.5 items-center justify-between bg-background"
               >
                 <div class="flex gap-x-2 items-center">
                   <BaseBadge
                     class="size-5 bg-primary/10 text-primary"
-                    :label="userSeason.sortOrder"
+                    :label="booking.seasonMountain.sortOrder"
                   />
-                  <span class="text-[0.79rem] font-semibold">{{ userSeason.mountain.name }}</span>
+                  <span class="text-[0.79rem] font-semibold">{{
+                    booking.seasonMountain.mountain.name
+                  }}</span>
                   <span class="text-xs text-muted-foreground">{{
-                    formatDate(userSeason.startDate, 'D MMM')
+                    formatDate(booking.seasonMountain.startDate, 'D MMM')
                   }}</span>
                 </div>
                 <div class="flex gap-x-2">
                   <BaseBadge
                     :class="[
                       'font-semibold text-[0.6rem]',
-                      isAfterNow(userSeason.startDate)
+                      isAfterNow(booking.seasonMountain.startDate)
                         ? 'bg-gray-500/10 text-gray-500'
                         : 'bg-primary/10 text-primary',
                     ]"
-                    :label="isAfterNow(userSeason.startDate) ? 'Realizado' : 'Próxima'"
+                    :label="isAfterNow(booking.seasonMountain.startDate) ? 'Realizado' : 'Próxima'"
                   />
                   <BaseBadge
                     class="bg-success/10 text-success font-semibold text-[0.6rem]"

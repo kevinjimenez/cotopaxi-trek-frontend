@@ -20,17 +20,6 @@ const GET_USERS_QUERY = `
                   name
                   year
                   isCurrent
-                  seasonMountains {
-                      id
-                      sortOrder
-                      price
-                      startDate
-                      endDate
-                      mountain {
-                          id
-                          name
-                      }
-                  }
               }
           }
           bookings {
@@ -43,12 +32,6 @@ const GET_USERS_QUERY = `
                   price
                   startDate
                   endDate
-                  season {
-                      id
-                      name
-                      year
-                      isCurrent
-                  }
                   mountain {
                       id
                       name
