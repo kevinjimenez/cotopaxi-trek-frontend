@@ -32,7 +32,7 @@ const { mutate: createUser, isPending } = useCreateUser();
 const { handleSubmit, defineField, errors, resetForm } = useForm<UserFormSchema>({
   validationSchema: toTypedSchema(userFormSchema),
   initialValues: {
-    companyId: '019ff298-3573-70ff-a00a-65bcdfe4267c',
+    companyId: '00000000-0000-0000-0000-000000000001',
     seasonId: undefined,
     name: '',
     lastname: '',
@@ -360,8 +360,14 @@ watch(
 
             <div class="flex items-center gap-x-2.5">
               <BaseBadge
-                class="bg-success/10 text-success text-[0.68rem] font-bold"
-                label="Activa"
+                :class="[
+                  'text-[0.68rem] font-bold',
+                  {
+                    'bg-success/10 text-success': item.status,
+                    'bg-destructive/10 text-destructive': !item.status,
+                  },
+                ]"
+                :label="item.status ? 'Activa' : 'Inactivo'"
               />
               <BaseButton
                 class="text-[0.8rem] border bg-white"
