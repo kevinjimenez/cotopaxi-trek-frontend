@@ -19,16 +19,45 @@ import { useGetSeason } from '../queries/get-season.query';
 import { useGetUsers } from '../queries/get-users.query';
 import type { UserResponse } from '../types/api/response/user-response.type';
 import type { Mountain } from '../types/mountain.type';
+import { useForm } from 'vee-validate';
+import { userFormSchema, type UserFormSchema } from '../schemas/user-form.schema';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useCreateUser } from '../mutations/create-user.mutation';
+import { toast } from 'vue-sonner';
 
-const status = ref(true);
-
+const statu = ref(true);
 const { data } = useGetUsers();
-const { data: season } = useGetSeason(status);
+const { data: season } = useGetSeason(statu);
+const { mutate: createUser, isPending } = useCreateUser();
+const { handleSubmit, defineField, errors, resetForm } = useForm<UserFormSchema>({
+  validationSchema: toTypedSchema(userFormSchema),
+  initialValues: {
+    companyId: '00000000-0000-0000-0000-000000000001',
+    seasonId: undefined,
+    name: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    role: 'customer',
+    username: '',
+    password: '',
+    status: true,
+    bookings: [],
+  },
+});
 const open = ref(false);
 const tabs = [
   { tab: 'personal', name: 'Datos personales', default: true },
   { tab: 'season-mountains', name: 'Temporadas y montañas', default: false },
 ];
+
+const [name, nameAttrs] = defineField('name');
+const [lastname, lastnameAttrs] = defineField('lastname');
+const [email, emailAttrs] = defineField('email');
+const [phone, phoneAttrs] = defineField('phone');
+const [username, usernameAttrs] = defineField('username');
+const [password, passwordAttrs] = defineField('password');
+const [status, statusAttrs] = defineField('status');
 
 const cloneMountains = ref<Mountain[]>([]);
 const newMountains = ref<Mountain[]>([]);
@@ -44,6 +73,43 @@ const addMountain = (id: number) => moveMountain(id, cloneMountains, newMountain
 const removeMountain = (id: number) => moveMountain(id, newMountains, cloneMountains);
 
 const activeSeason = (item: UserResponse) => item.userSeasons.find((e) => e.status);
+
+const onSave = () => {
+  onSubmit();
+};
+
+const onSubmit = handleSubmit(
+  async (value) => {
+    if (!season.value) return;
+    const userToCreate = {
+      ...value,
+      seasonId: season.value.id,
+      bookings: newMountains.value.map((mountain) => ({
+        seasonMountainId: mountain.seasonMountainId,
+      })),
+    };
+    createUser(userToCreate, {
+      onSuccess: () => {
+        resetForm();
+        newMountains.value = [];
+        toast.success('Usuario creado', {
+          position: 'top-right',
+          description: `${userToCreate.name} ya está disponible en la plataforma.`,
+        });
+        open.value = false;
+      },
+      onError: (error) => {
+        toast.error('No se pudo crear el usuario', {
+          position: 'top-right',
+          description: error.message,
+        });
+      },
+    });
+  },
+  ({ errors }) => {
+    console.error('validation failed', errors);
+  },
+);
 
 // watch(season, (value) => console.log({ season: value?.mountains }));
 watch(
@@ -80,17 +146,65 @@ watch(
         <BaseTabs :tabs="tabs">
           <template #personal>
             <div class="flex flex-col w-full gap-y-2">
-              <BaseInput label="nombre" />
-              <BaseInput label="apellido" />
-              <BaseInput label="correo" />
-              <BaseInput label="telefono" />
+              <div class="flex gap-x-2">
+                <BaseInput
+                  label="nombre"
+                  helperText="Ingrese el nombre del cliente"
+                  required
+                  v-model="name"
+                  v-bind="nameAttrs"
+                  :error="errors.name"
+                />
+                <BaseInput
+                  label="apellido"
+                  helperText="Ingrese el apellido del cliente"
+                  required
+                  v-model="lastname"
+                  v-bind="lastnameAttrs"
+                  :error="errors.lastname"
+                />
+              </div>
+              <div class="flex gap-x-2">
+                <BaseInput
+                  label="correo"
+                  helperText="Ingrese el correo del cliente"
+                  v-model="email"
+                  v-bind="emailAttrs"
+                  :error="errors.email"
+                  type="email"
+                />
+                <BaseInput
+                  label="telefono"
+                  helperText="Ingrese el telefono del cliente"
+                  required
+                  v-model="phone"
+                  v-bind="phoneAttrs"
+                  :error="errors.phone"
+                  mask="+593 ### ### ###"
+                />
+              </div>
               <div class="flex flex-col gap-y-4">
                 <span class="uppercase text-xs text-muted-foreground font-semibold"
                   >Cuenta de acceso</span
                 >
                 <div class="flex gap-x-2">
-                  <BaseInput label="username" />
-                  <BaseInput label="password" />
+                  <BaseInput
+                    label="username"
+                    helperText="Ingrese el username del cliente"
+                    required
+                    v-model="username"
+                    v-bind="usernameAttrs"
+                    :error="errors.username"
+                  />
+                  <BaseInput
+                    label="password"
+                    type="password"
+                    helperText="Ingrese el password del cliente"
+                    required
+                    v-model="password"
+                    v-bind="passwordAttrs"
+                    :error="errors.password"
+                  />
                 </div>
               </div>
               <div class="flex w-full">
@@ -100,7 +214,7 @@ watch(
                     >Visible y disponible para reservas.</span
                   >
                 </div>
-                <BaseToggle />
+                <BaseToggle v-model="status" v-bind="statusAttrs" />
               </div>
             </div>
           </template>
@@ -198,7 +312,7 @@ watch(
             variant="secondary"
             @click="open = false"
           />
-          <BaseButton label="Guardar" class="flex-1" />
+          <BaseButton label="Guardar" class="flex-1" @click="onSave" :loading="isPending" />
         </div>
       </BaseModal>
     </section>
@@ -222,11 +336,7 @@ watch(
                 <p class="text-xs text-muted-foreground">@{{ item.username }}</p>
                 <div class="size-1 bg-muted-foreground rounded-full" />
                 <p class="text-xs text-muted-foreground">
-                  {{
-                    item.userSeasons.find((userSeason) => {
-                      return userSeason.status;
-                    })?.season.seasonMountains.length ?? 0
-                  }}
+                  {{ item.bookings.length }}
                   Montañas
                 </p>
               </div>
@@ -246,8 +356,14 @@ watch(
 
             <div class="flex items-center gap-x-2.5">
               <BaseBadge
-                class="bg-success/10 text-success text-[0.68rem] font-bold"
-                label="Activa"
+                :class="[
+                  'text-[0.68rem] font-bold',
+                  {
+                    'bg-success/10 text-success': item.status,
+                    'bg-destructive/10 text-destructive': !item.status,
+                  },
+                ]"
+                :label="item.status ? 'Activa' : 'Inactivo'"
               />
               <BaseButton
                 class="text-[0.8rem] border bg-white"
@@ -259,9 +375,7 @@ watch(
           </div>
         </AccordionTrigger>
         <AccordionContent>
-          <template
-            v-if="!activeSeason(item) || activeSeason(item)?.season.seasonMountains.length === 0"
-          >
+          <template v-if="item.bookings.length === 0">
             <div class="w-full flex pl-12 pt-2">
               <span class="text-muted-foreground/65 text-xs italic"
                 >No está inscrit@ en la temporada activa.</span
@@ -275,29 +389,31 @@ watch(
                 activeSeason(item)?.season.name
               }}</span>
               <div
-                v-for="(userSeason, i) in activeSeason(item)?.season.seasonMountains"
+                v-for="(booking, i) in item.bookings"
                 :key="i"
                 class="flex w-full border my-2 rounded-sm p-2.5 items-center justify-between bg-background"
               >
                 <div class="flex gap-x-2 items-center">
                   <BaseBadge
                     class="size-5 bg-primary/10 text-primary"
-                    :label="userSeason.sortOrder"
+                    :label="booking.seasonMountain.sortOrder"
                   />
-                  <span class="text-[0.79rem] font-semibold">{{ userSeason.mountain.name }}</span>
+                  <span class="text-[0.79rem] font-semibold">{{
+                    booking.seasonMountain.mountain.name
+                  }}</span>
                   <span class="text-xs text-muted-foreground">{{
-                    formatDate(userSeason.startDate, 'D MMM')
+                    formatDate(booking.seasonMountain.startDate, 'D MMM')
                   }}</span>
                 </div>
                 <div class="flex gap-x-2">
                   <BaseBadge
                     :class="[
                       'font-semibold text-[0.6rem]',
-                      isAfterNow(userSeason.startDate)
+                      isAfterNow(booking.seasonMountain.startDate)
                         ? 'bg-gray-500/10 text-gray-500'
                         : 'bg-primary/10 text-primary',
                     ]"
-                    :label="isAfterNow(userSeason.startDate) ? 'Realizado' : 'Próxima'"
+                    :label="isAfterNow(booking.seasonMountain.startDate) ? 'Realizado' : 'Próxima'"
                   />
                   <BaseBadge
                     class="bg-success/10 text-success font-semibold text-[0.6rem]"

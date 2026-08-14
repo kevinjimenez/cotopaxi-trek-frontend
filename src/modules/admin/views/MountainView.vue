@@ -30,7 +30,7 @@ const longitude = ref<number | null>(null);
 const { handleSubmit, defineField, errors, resetForm } = useForm<MountainFormSchema>({
   validationSchema: toTypedSchema(mountainFormSchema),
   initialValues: {
-    companyId: '019ff298-3573-70ff-a00a-65bcdfe4267c',
+    companyId: '00000000-0000-0000-0000-000000000001',
     name: '',
     altitudeMeters: '' as unknown as number,
     location: '',
@@ -133,7 +133,7 @@ watchDebounced(
                 class="w-full object-cover"
               />
             </picture> -->
-            <BaseInputFile v-model="logoFile" class="w-40" />
+            <BaseInputFile v-model="logoFile" class="w-40 min-w-40" />
             <div class="flex flex-col w-full justify-center flex-1 gap-y-4">
               <BaseInput
                 label="nombre"
