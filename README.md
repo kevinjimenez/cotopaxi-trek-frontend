@@ -16,6 +16,77 @@ Esta plantilla te ayuda a empezar a desarrollar con Vue 3 en Vite.
 
 - [Axios](https://axios-http.com/) — cliente HTTP para consumir la API del backend.
 - [TanStack Query](https://tanstack.com/query) (`@tanstack/vue-query`) — manejo de estado del servidor: cache, refetch, loading/error states sobre las llamadas a la API.
+- [Pinia](https://pinia.vuejs.org/) — estado global del lado del cliente.
+- [VueUse](https://vueuse.org/) (`@vueuse/core`) — composables utilitarios; lo usan varios primitivos de `src/shadcn` internamente (`useVModel`, etc.).
+
+## Formularios y validación
+
+- [vee-validate](https://vee-validate.logaretm.com/) — manejo de formularios: estado de campos, errores, `handleSubmit`, arrays de campos (`useFieldArray`).
+- [Zod](https://zod.dev/) + [`@vee-validate/zod`](https://vee-validate.logaretm.com/v4/integrations/zod-schema-validation/) — esquemas de validación (`z.object`, `z.coerce`) que se conectan al formulario vía `toTypedSchema`.
+
+### Convenciones de formularios en este proyecto
+
+**Un schema Zod por formulario, en `src/modules/admin/schemas/*.schema.ts`:**
+
+```ts
+export const seasonFormSchema = z.object({
+  name: z.string().min(1, 'El nombre es obligatorio'),
+  year: z.coerce.number().int(),
+  startDate: z.coerce.date(),
+});
+
+export type SeasonFormSchema = z.infer<typeof seasonFormSchema>;
+```
+
+`z.infer<typeof schema>` genera el tipo TS del formulario a partir del schema — no se escribe una `interface` aparte a mano, así siempre están sincronizados.
+
+**Por qué `z.coerce`:** los inputs HTML siempre entregan `string`, aunque el campo represente un número o una fecha. `z.coerce.number()`/`z.coerce.date()` convierten el valor antes de validar (`Number(valor)` / `new Date(valor)`), en vez de rechazarlo por no ser del tipo exacto. Se usa en cualquier campo numérico o de fecha del formulario.
+
+**`useForm` + `toTypedSchema` + `defineField`:**
+
+```ts
+const { handleSubmit, defineField, errors, resetForm } = useForm<SeasonFormSchema>({
+  validationSchema: toTypedSchema(seasonFormSchema),
+  initialValues: { name: '', year: '' as unknown as number /* ... */ },
+});
+
+const [name, nameAttrs] = defineField('name');
+```
+
+`defineField('campo')` devuelve `[ref, attrs]`: el `ref` va en `v-model` y `attrs` (que trae `onBlur` y el tracking de "tocado" de vee-validate) va en `v-bind`. Los errores de cada campo se leen directo del objeto `errors` (`errors.name`, sin `.value` en el template).
+
+**Truco `'' as unknown as number` / `undefined as unknown as Date` en `initialValues`:** un campo requerido por el schema (ej. `year: z.coerce.number()`) no puede arrancar en `undefined` sin romper el tipo. Este cast deja el campo vacío en pantalla (buena UX: no aparece un `0` ni una fecha por defecto) sin pelearse con TypeScript, sabiendo que Zod lo va a validar igual al enviar.
+
+**Puente `string` ↔ `number` en inputs numéricos:** los componentes `Base*` (ej. `BaseInput`) solo hablan `string` en su `v-model` (son inputs de HTML). Cuando el campo del schema es `number`, se usa un `computed({ get, set })` como intermediario:
+
+```ts
+const priceInput = computed({
+  get: () => price.value?.toString() ?? '',
+  set: (value) => { price.value = Number(value); },
+});
+```
+
+y el `v-model` del input apunta al `computed`, no al `ref` del `defineField` directamente. Mismo patrón para `Date` ↔ `DateValue` en `BaseDatePicker.vue` (ver `src/shared/components/ui/BaseDatePicker.vue`).
+
+**Arrays de campos con `useFieldArray`:** para listas dinámicas dentro de un formulario (ej. las montañas de una temporada), en vez de un `ref()` suelto desconectado del form:
+
+```ts
+const { fields, push, remove, move } = useFieldArray<SeasonMountainFormSchema>('mountains');
+```
+
+`fields` es de solo lectura (no se le puede hacer `v-model` directo, ej. a una lista de drag-and-drop) — para reordenar se usa `move(oldIndex, newIndex)`, no reasignar el array. A diferencia de `defineField`, `useFieldArray` no da un `attrs` con tracking de "tocado" por fila — si hace falta (para no mostrar errores de validación antes de que el usuario toque un campo recién agregado), hay que armarlo a mano (ver `touchedMountainRows` en `SeasonView.vue`).
+
+## Fechas
+
+- [dayjs](https://day.js.org/) — formateo/manipulación de fechas en la UI (`formatDate`, `fromNow`, etc.), con locale `es` cargado en `src/shared/utils/date.utils.ts`.
+- [`@internationalized/date`](https://react-spectrum.adobe.com/internationalized/date/index.html) — tipo `DateValue`/`CalendarDate` que usa el calendario de Reka UI internamente; `BaseDatePicker.vue` puentea entre este tipo y `Date` nativo de JS.
+
+## Otras utilidades
+
+- [maska](https://beholdr.github.io/maska/) (`v-maska`) — máscaras de input (teléfono con prefijo fijo, formato numérico con separador de miles/decimales).
+- [vue-sonner](https://vue-sonner.robertsoriano.com/) — notificaciones toast (éxito/error tras crear registros).
+- [vue-draggable-plus](https://vue-draggable-plus.pages.dev/) — drag and drop para reordenar listas (ej. orden de ascenso de montañas en una temporada).
+- [Leaflet](https://leafletjs.com/) + [`@vue-leaflet/vue-leaflet`](https://github.com/vue-leaflet/vue-leaflet) — mapa interactivo para elegir ubicación (`MapPicker.vue`), con geocoding vía Nominatim.
 
 ## Estructura de componentes: `src/shadcn` vs `src/shared`
 
