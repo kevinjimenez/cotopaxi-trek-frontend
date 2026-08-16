@@ -1,11 +1,11 @@
-import { gql } from '@/shared/services/graphql';
-import { useQuery } from '@tanstack/vue-query';
-import type { Ref } from 'vue';
-import type { SeasonResponse } from '../types/api/response/season-response.type';
-import { seasonKeys } from './keys/season.query-key';
+import { gql } from "@/shared/services/graphql";
+import { useQuery } from "@tanstack/vue-query";
+import type { Ref } from "vue";
+import type { SeasonResponse } from "../types/api/response/season-response.type";
+import { seasonKeys } from "./keys/season.query-key";
 
 const GET_SEASON_QUERY = `
-  query ($params: QueryParamsDto) {
+  query ($params: SeasonParamsDto) {
       season(params: $params) {
           id
           name
@@ -26,7 +26,7 @@ const GET_SEASON_QUERY = `
   }
   `;
 
-export const getSeason = async (status?: boolean) => {
+export const getSeason = async ({ status }: { id?: number; status?: boolean }) => {
   const { season } = await gql<{
     season: SeasonResponse;
   }>(GET_SEASON_QUERY, { params: { status } });
@@ -47,6 +47,6 @@ export const getSeason = async (status?: boolean) => {
 export const useGetSeason = (status?: Ref<boolean | undefined>) => {
   return useQuery({
     queryKey: [...seasonKeys.one({ status: status?.value })],
-    queryFn: () => getSeason(status?.value),
+    queryFn: () => getSeason({ status: status?.value }),
   });
 };
