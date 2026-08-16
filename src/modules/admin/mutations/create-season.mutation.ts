@@ -1,7 +1,8 @@
-import { gql } from '@/shared/services/graphql';
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import type { SeasonRequest } from '../types/api/request/season-request.type';
-import type { SeasonResponse } from '../types/api/response/season-response.type';
+import { gql } from "@/shared/services/graphql";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import type { SeasonRequest } from "../types/api/request/season-request.type";
+import type { SeasonResponse } from "../types/api/response/season-response.type";
+import { seasonKeys } from "../queries/keys/season.query-key";
 
 const CREATE_SEASONUSER_MUTATION = `
   mutation CreateSeason($input: CreateSeasonInput!) {
@@ -41,8 +42,10 @@ export const useCreateSeason = () => {
 
   return useMutation({
     mutationFn: createSeason,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['seasons'] });
+    onSuccess: async (newSeason) => {
+      console.log({ newSeason });
+      // await queryClient.invalidateQueries({ queryKey: ["seasons"] });
+      await queryClient.invalidateQueries({ queryKey: seasonKeys.all() });
     },
   });
 };

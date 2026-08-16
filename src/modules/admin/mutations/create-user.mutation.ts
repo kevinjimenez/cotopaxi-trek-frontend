@@ -1,8 +1,8 @@
-import { gql } from '@/shared/services/graphql';
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { userKeys } from '../queries/keys/user.query-key';
-import type { UserRequest } from '../types/api/request/user-request.type';
-import type { UserResponse } from '../types/api/response/user-response.type';
+import { gql } from "@/shared/services/graphql";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { userKeys } from "../queries/keys/user.query-key";
+import type { UserRequest } from "../types/api/request/user-request.type";
+import type { UserResponse } from "../types/api/response/user-response.type";
 
 const CREATE_USER_MUTATION = `
   mutation CreateUser($input: CreateUserInput!) {
@@ -56,9 +56,11 @@ export const useCreateUser = () => {
   return useMutation({
     mutationFn: createUser,
     onSuccess: async (newUser) => {
-      queryClient.setQueryData<UserResponse[]>(userKeys.all, (old) =>
-        old ? [...old, newUser] : [newUser],
-      );
+      console.log({ newUser });
+      // queryClient.setQueryData<UserResponse[]>(userKeys.all, (old) =>
+      //   old ? [...old, newUser] : [newUser],
+      // );
+      await queryClient.invalidateQueries({ queryKey: userKeys.all });
     },
   });
 };

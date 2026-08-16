@@ -1,8 +1,8 @@
-import { gql } from '@/shared/services/graphql';
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { companyKeys } from '../queries/keys/company.query-key';
-import type { CompanyRequest } from '../types/api/request/company-request.type';
-import type { CompanyResponse } from '../types/api/response/company-response.type';
+import { gql } from "@/shared/services/graphql";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { companyKeys } from "../queries/keys/company.query-key";
+import type { CompanyRequest } from "../types/api/request/company-request.type";
+import type { CompanyResponse } from "../types/api/response/company-response.type";
 
 const CREATE_COMPANY_MUTATION = `
   mutation CreateCompany($input: CreateCompanyInput!) {
@@ -29,10 +29,11 @@ export const useCreateCompany = () => {
   return useMutation({
     mutationFn: createCompany,
     onSuccess: async (newCompany) => {
-      queryClient.setQueryData<CompanyResponse[]>(companyKeys.all, (old) =>
-        old ? [...old, newCompany] : [newCompany],
-      );
-      // queryClient.invalidateQueries({ queryKey: companyKeys.all });
+      console.log({ newCompany });
+      // queryClient.setQueryData<CompanyResponse[]>(companyKeys.all, (old) =>
+      //   old ? [...old, newCompany] : [newCompany],
+      // );
+      queryClient.invalidateQueries({ queryKey: companyKeys.all });
     },
   });
 };

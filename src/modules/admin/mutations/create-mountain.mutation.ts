@@ -1,8 +1,8 @@
-import { gql } from '@/shared/services/graphql';
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { mountainKeys } from '../queries/keys/mountain.query-key';
-import type { MountainRequest } from '../types/api/request/mountain-request.type';
-import type { MountainResponse } from '../types/api/response/mountain-response.type';
+import { gql } from "@/shared/services/graphql";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { mountainKeys } from "../queries/keys/mountain.query-key";
+import type { MountainRequest } from "../types/api/request/mountain-request.type";
+import type { MountainResponse } from "../types/api/response/mountain-response.type";
 
 const CREATE_MOUNTAIN_MUTATION = `
   mutation CreateMountain($input: CreateMountainInput!) {
@@ -32,10 +32,11 @@ export const useCreateMountain = () => {
   return useMutation({
     mutationFn: createMountain,
     onSuccess: async (newMountain) => {
-      queryClient.setQueryData<MountainResponse[]>(mountainKeys.all, (old) =>
-        old ? [...old, newMountain] : [newMountain],
-      );
-      // queryClient.invalidateQueries({ queryKey: companyKeys.all });
+      console.log({ newMountain });
+      // queryClient.setQueryData<MountainResponse[]>(mountainKeys.all, (old) =>
+      //   old ? [...old, newMountain] : [newMountain],
+      // );
+      queryClient.invalidateQueries({ queryKey: mountainKeys.all });
     },
   });
 };
