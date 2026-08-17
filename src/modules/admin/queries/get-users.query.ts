@@ -1,7 +1,7 @@
-import { gql } from '@/shared/services/graphql';
-import { useQuery } from '@tanstack/vue-query';
-import type { UserResponse } from '../types/api/response/user-response.type';
-import { userKeys } from './keys/user.query-key';
+import { gql } from "@/shared/services/graphql";
+import { useQuery } from "@tanstack/vue-query";
+import type { UserResponse } from "../types/api/response/user-response.type";
+import { userKeys } from "./keys/user.query-key";
 
 const GET_USERS_QUERY = `
   query {

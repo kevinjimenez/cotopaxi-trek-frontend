@@ -1,8 +1,8 @@
-import { gql } from '@/shared/services/graphql';
-import { useQuery } from '@tanstack/vue-query';
-import type { Ref } from 'vue';
-import type { SeasonResponse } from '../types/api/response/season-response.type';
-import { seasonKeys } from './keys/season.query-key';
+import { gql } from "@/shared/services/graphql";
+import { useQuery } from "@tanstack/vue-query";
+import type { Ref } from "vue";
+import type { SeasonResponse } from "../types/api/response/season-response.type";
+import { seasonKeys } from "./keys/season.query-key";
 
 const GET_SEASONS_QUERY = `
   query ($params: QueryParamsDto) {

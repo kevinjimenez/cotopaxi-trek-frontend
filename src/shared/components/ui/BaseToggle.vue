@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ToggleGroup, ToggleGroupItem } from '@/shadcn/ui/toggle-group';
-import { computed } from 'vue';
+import { ToggleGroup, ToggleGroupItem } from "@/shadcn/ui/toggle-group";
+import { computed } from "vue";
 
 const model = defineModel<boolean>({ default: true });
 
 const toggleValue = computed({
-  get: () => (model.value ? 'active' : 'inactive'),
+  get: () => (model.value ? "active" : "inactive"),
   set: (value: string) => {
-    model.value = value === 'active';
+    model.value = value === "active";
   },
 });
 </script>

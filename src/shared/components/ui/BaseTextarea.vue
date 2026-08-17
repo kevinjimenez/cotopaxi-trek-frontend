@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Textarea } from '@/shadcn/ui/textarea';
-import { cn } from '@/shadcn/utils';
-import type { HTMLAttributes } from 'vue';
+import { Textarea } from "@/shadcn/ui/textarea";
+import { cn } from "@/shadcn/utils";
+import type { HTMLAttributes } from "vue";
 
 interface Props {
   label?: string;
@@ -10,7 +10,7 @@ interface Props {
   error?: string;
   required?: boolean;
   helperText?: string;
-  class?: HTMLAttributes['class'];
+  class?: HTMLAttributes["class"];
 }
 
 defineOptions({ inheritAttrs: false });
@@ -21,7 +21,6 @@ const model = defineModel<string>();
 <template>
   <div :class="cn('grid w-full items-center', props.class)">
     <div class="flex flex-col">
-      <!-- <label v-if="label" class="uppercase font-bold text-xs mb-0.5">{{ label }}</label> -->
       <label v-if="label" class="uppercase font-bold text-xs mb-0.5 text-muted-foreground">
         {{ label }} <span v-if="required" class="text-destructive"> * </span>
       </label>
