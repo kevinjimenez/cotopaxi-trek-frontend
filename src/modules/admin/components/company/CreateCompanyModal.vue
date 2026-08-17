@@ -5,8 +5,8 @@ import BaseInputFile from "@/shared/components/ui/BaseInputFile.vue";
 import BaseModal from "@/shared/components/ui/BaseModal.vue";
 import BaseToggle from "@/shared/components/ui/BaseToggle.vue";
 import { ref, watch } from "vue";
-import { useCompanyForm } from "../composables/use-company-form";
-import { useCreateCompany } from "../mutations/create-company.mutation";
+import { useCompanyForm } from "../../composables/use-company-form";
+import { useCreateCompany } from "../../mutations/create-company.mutation";
 import { useToast } from "@/shared/composables/use-toast";
 
 interface Props {

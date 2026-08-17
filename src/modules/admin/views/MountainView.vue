@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import CreateMountainModal from "../components/CreateMountainModal.vue";
-import HeaderMountainView from "../components/HeaderMountainView.vue";
-import RowMountain from "../components/RowMountain.vue";
+import CreateMountainModal from "../components/mountain/CreateMountainModal.vue";
+import HeaderMountainView from "../components/mountain/HeaderMountainView.vue";
+import RowMountain from "../components/mountain/RowMountain.vue";
 import { useGetMountains } from "../queries/get-mountains.query";
 
 const { data: mountains } = useGetMountains();

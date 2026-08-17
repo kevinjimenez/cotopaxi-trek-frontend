@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import CardCompany from "../components/CardCompany.vue";
-import CreateCompanyModal from "../components/CreateCompanyModal.vue";
-import HeaderCompanyView from "../components/HeaderCompanyView.vue";
+import CardCompany from "../components/company/CardCompany.vue";
+import CreateCompanyModal from "../components/company/CreateCompanyModal.vue";
+import HeaderCompanyView from "../components/company/HeaderCompanyView.vue";
 import { useGetCompanies } from "../queries/get-companies.query";
 
 const { data: companies } = useGetCompanies();

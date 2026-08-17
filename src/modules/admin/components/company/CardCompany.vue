@@ -2,7 +2,7 @@
 import InstagramIcon from "@/shared/components/icons/InstagramIcon.vue";
 import WhatsAppIcon from "@/shared/components/icons/WhatsAppIcon.vue";
 import BaseButton from "@/shared/components/ui/BaseButton.vue";
-import type { CompanyResponse } from "../types/api/response/company-response.type";
+import type { CompanyResponse } from "../../types/api/response/company-response.type";
 import BaseImage from "@/shared/components/ui/BaseImage.vue";
 
 interface Props {

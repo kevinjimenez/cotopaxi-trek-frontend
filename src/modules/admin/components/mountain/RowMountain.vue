@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BaseBadge from "@/shared/components/ui/BaseBadge.vue";
-import type { MountainResponse } from "../types/api/response/mountain-response.type";
+import type { MountainResponse } from "../../types/api/response/mountain-response.type";
 import BaseButton from "@/shared/components/ui/BaseButton.vue";
 import BaseDivider from "@/shared/components/ui/BaseDivider.vue";
 
