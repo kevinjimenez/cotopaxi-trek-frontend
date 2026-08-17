@@ -4,26 +4,26 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/shadcn/ui/accordion';
-import { Progress } from '@/shadcn/ui/progress';
-import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
-import BaseButton from '@/shared/components/ui/BaseButton.vue';
-import BaseInput from '@/shared/components/ui/BaseInput.vue';
-import BaseModal from '@/shared/components/ui/BaseModal.vue';
-import BaseTabs from '@/shared/components/ui/BaseTabs.vue';
-import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
-import { formatDate, isAfterNow } from '@/shared/utils/date.utils';
-import { ChevronRight, CircleCheck, Plus, X } from '@lucide/vue';
-import { ref, watch, type Ref } from 'vue';
-import { useGetSeason } from '../queries/get-season.query';
-import { useGetUsers } from '../queries/get-users.query';
-import type { UserResponse } from '../types/api/response/user-response.type';
-import type { Mountain } from '../types/mountain.type';
-import { useForm } from 'vee-validate';
-import { userFormSchema, type UserFormSchema } from '../schemas/user-form.schema';
-import { toTypedSchema } from '@vee-validate/zod';
-import { useCreateUser } from '../mutations/create-user.mutation';
-import { toast } from 'vue-sonner';
+} from "@/shadcn/ui/accordion";
+import { Progress } from "@/shadcn/ui/progress";
+import BaseBadge from "@/shared/components/ui/BaseBadge.vue";
+import BaseButton from "@/shared/components/ui/BaseButton.vue";
+import BaseInput from "@/shared/components/ui/BaseInput.vue";
+import BaseModal from "@/shared/components/ui/BaseModal.vue";
+import BaseTabs from "@/shared/components/ui/BaseTabs.vue";
+import BaseToggle from "@/shared/components/ui/BaseToggle.vue";
+import { formatDate, isAfterNow } from "@/shared/utils/date.utils";
+import { ChevronRight, CircleCheck, Plus, X } from "@lucide/vue";
+import { ref, watch, type Ref } from "vue";
+import { useGetSeason } from "../queries/get-season.query";
+import { useGetUsers } from "../queries/get-users.query";
+import type { UserResponse } from "../types/api/response/user-response.type";
+import type { Mountain } from "../types/mountain.type";
+import { useForm } from "vee-validate";
+import { userFormSchema, type UserFormSchema } from "../schemas/user-form.schema";
+import { toTypedSchema } from "@vee-validate/zod";
+import { useCreateUser } from "../mutations/create-user.mutation";
+import { toast } from "vue-sonner";
 
 const statu = ref(true);
 const { data } = useGetUsers();
@@ -32,32 +32,32 @@ const { mutate: createUser, isPending } = useCreateUser();
 const { handleSubmit, defineField, errors, resetForm } = useForm<UserFormSchema>({
   validationSchema: toTypedSchema(userFormSchema),
   initialValues: {
-    companyId: '00000000-0000-0000-0000-000000000001',
+    companyId: "00000000-0000-0000-0000-000000000001",
     seasonId: undefined,
-    name: '',
-    lastname: '',
-    email: '',
-    phone: '',
-    role: 'customer',
-    username: '',
-    password: '',
+    name: "",
+    lastname: "",
+    email: "",
+    phone: "",
+    role: "customer",
+    username: "",
+    password: "",
     status: true,
     bookings: [],
   },
 });
 const open = ref(false);
 const tabs = [
-  { tab: 'personal', name: 'Datos personales', default: true },
-  { tab: 'season-mountains', name: 'Temporadas y montañas', default: false },
+  { tab: "personal", name: "Datos personales", default: true },
+  { tab: "season-mountains", name: "Temporadas y montañas", default: false },
 ];
 
-const [name, nameAttrs] = defineField('name');
-const [lastname, lastnameAttrs] = defineField('lastname');
-const [email, emailAttrs] = defineField('email');
-const [phone, phoneAttrs] = defineField('phone');
-const [username, usernameAttrs] = defineField('username');
-const [password, passwordAttrs] = defineField('password');
-const [status, statusAttrs] = defineField('status');
+const [name, nameAttrs] = defineField("name");
+const [lastname, lastnameAttrs] = defineField("lastname");
+const [email, emailAttrs] = defineField("email");
+const [phone, phoneAttrs] = defineField("phone");
+const [username, usernameAttrs] = defineField("username");
+const [password, passwordAttrs] = defineField("password");
+const [status, statusAttrs] = defineField("status");
 
 const cloneMountains = ref<Mountain[]>([]);
 const newMountains = ref<Mountain[]>([]);
@@ -92,22 +92,22 @@ const onSubmit = handleSubmit(
       onSuccess: () => {
         resetForm();
         newMountains.value = [];
-        toast.success('Usuario creado', {
-          position: 'top-right',
+        toast.success("Usuario creado", {
+          position: "top-right",
           description: `${userToCreate.name} ya está disponible en la plataforma.`,
         });
         open.value = false;
       },
       onError: (error) => {
-        toast.error('No se pudo crear el usuario', {
-          position: 'top-right',
+        toast.error("No se pudo crear el usuario", {
+          position: "top-right",
           description: error.message,
         });
       },
     });
   },
   ({ errors }) => {
-    console.error('validation failed', errors);
+    console.error("validation failed", errors);
   },
 );
 
@@ -140,7 +140,12 @@ watch(
       <BaseModal
         title="Nueva usuario"
         :open="open"
-        @close="open = false"
+        @close="
+          () => {
+            resetForm();
+            open = false;
+          }
+        "
         class-container="max-w-[40rem]"
       >
         <BaseTabs :tabs="tabs">
@@ -402,7 +407,7 @@ watch(
                     booking.seasonMountain.mountain.name
                   }}</span>
                   <span class="text-xs text-muted-foreground">{{
-                    formatDate(booking.seasonMountain.startDate, 'D MMM')
+                    formatDate(booking.seasonMountain.startDate, "D MMM")
                   }}</span>
                 </div>
                 <div class="flex gap-x-2">
