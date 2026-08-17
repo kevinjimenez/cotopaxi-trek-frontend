@@ -3,7 +3,7 @@ import BaseButton from "@/shared/components/ui/BaseButton.vue";
 import { Plus } from "@lucide/vue";
 
 defineEmits<{
-  openModal: [];
+  open: [];
 }>();
 </script>
 <template>
@@ -19,7 +19,7 @@ defineEmits<{
       label="Nueva montaña"
       :prefix-icon="Plus"
       icon-class="size-2.5"
-      @click="$emit('openModal')"
+      @click="$emit('open')"
     />
   </section>
 </template>

@@ -49,17 +49,6 @@ const {
 
 const logoFile = ref<File>();
 
-watch(
-  () => props.open,
-  (isOpen) => {
-    if (isOpen) resetForm();
-  },
-);
-
-const onSave = () => {
-  onSubmit();
-};
-
 const onSubmit = handleSubmit(
   async (value) => {
     const mountainToCreate = buildPayload(value);
@@ -76,6 +65,17 @@ const onSubmit = handleSubmit(
   },
   ({ errors }) => {
     console.error("validation failed", errors);
+  },
+);
+
+const onSave = () => {
+  onSubmit();
+};
+
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (isOpen) resetForm();
   },
 );
 </script>
