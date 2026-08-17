@@ -5,7 +5,7 @@ export const mountainFormSchema = z.object({
   name: z.string().min(1, "El nombre es obligatorio"),
   altitudeMeters: z.coerce.number().positive("La altitud debe ser un número positivo"),
   location: z.string().min(1, "La ubicación es obligatoria"),
-  reference: z.string().min(1).optional(),
+  reference: z.string().optional(),
   latitude: z.coerce.number().min(-90).max(90).optional(),
   longitude: z.coerce.number().min(-180).max(180).optional(),
   generalDescription: z.string().optional(),

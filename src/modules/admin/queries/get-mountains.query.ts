@@ -5,12 +5,12 @@ import { mountainKeys } from "./keys/mountain.query-key";
 
 const GET_MOUNTAINS_QUERY = `
 query {
-    mountains {
-        id
-        name
-        location
-        altitudeMeters
-        status
+  mountains {
+    id
+    name
+    location
+    altitudeMeters
+    status
     }
 }`;
 
