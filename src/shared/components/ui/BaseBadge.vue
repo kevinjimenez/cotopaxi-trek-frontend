@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { Badge } from '@/shadcn/ui/badge';
-import type { ButtonVariants } from '@/shadcn/ui/button';
-import { cn } from '@/shadcn/utils';
-import type { LucideIcon } from '@lucide/vue';
-import type { HTMLAttributes } from 'vue';
+import { Badge } from "@/shadcn/ui/badge";
+import type { ButtonVariants } from "@/shadcn/ui/button";
+import { cn } from "@/shadcn/utils";
+import type { LucideIcon } from "@lucide/vue";
+import type { HTMLAttributes } from "vue";
 interface Props {
   label: string | number;
   prefixIcon?: LucideIcon;
   suffixIcon?: LucideIcon;
-  variant?: ButtonVariants['variant'];
-  class?: HTMLAttributes['class'];
+  variant?: ButtonVariants["variant"];
+  class?: HTMLAttributes["class"];
   iconClass?: string;
 }
 

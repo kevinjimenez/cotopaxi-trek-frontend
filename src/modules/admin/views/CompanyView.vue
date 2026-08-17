@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import InstagramIcon from '@/shared/components/icons/InstagramIcon.vue';
-import WhatsAppIcon from '@/shared/components/icons/WhatsAppIcon.vue';
-import BaseButton from '@/shared/components/ui/BaseButton.vue';
-import BaseInput from '@/shared/components/ui/BaseInput.vue';
-import BaseModal from '@/shared/components/ui/BaseModal.vue';
-import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
-import { Plus } from '@lucide/vue';
-import { toTypedSchema } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
-import { ref } from 'vue';
-import { toast } from 'vue-sonner';
-import { useCreateCompany } from '../mutations/create-company.mutation';
-import { useGetCompanies } from '../queries/get-companies.query';
-import { companyFormSchema, type CompanyFormSchema } from '../schemas/company-form.schema';
-import BaseInputFile from '@/shared/components/ui/BaseInputFile.vue';
+import InstagramIcon from "@/shared/components/icons/InstagramIcon.vue";
+import WhatsAppIcon from "@/shared/components/icons/WhatsAppIcon.vue";
+import BaseButton from "@/shared/components/ui/BaseButton.vue";
+import BaseInput from "@/shared/components/ui/BaseInput.vue";
+import BaseModal from "@/shared/components/ui/BaseModal.vue";
+import BaseToggle from "@/shared/components/ui/BaseToggle.vue";
+import { Plus } from "@lucide/vue";
+import { toTypedSchema } from "@vee-validate/zod";
+import { useForm } from "vee-validate";
+import { ref } from "vue";
+import { toast } from "vue-sonner";
+import { useCreateCompany } from "../mutations/create-company.mutation";
+import { useGetCompanies } from "../queries/get-companies.query";
+import { companyFormSchema, type CompanyFormSchema } from "../schemas/company-form.schema";
+import BaseInputFile from "@/shared/components/ui/BaseInputFile.vue";
 
 const { data } = useGetCompanies();
 const { mutate: createCompany, isPending } = useCreateCompany();
@@ -33,47 +33,47 @@ const onSave = () => {
 const { handleSubmit, defineField, errors, resetForm } = useForm<CompanyFormSchema>({
   validationSchema: toTypedSchema(companyFormSchema),
   initialValues: {
-    name: '',
-    slug: '',
-    whatsapp: '',
-    instagram: '',
-    logoUrl: '',
-    primaryColor: '',
+    name: "",
+    slug: "",
+    whatsapp: "",
+    instagram: "",
+    logoUrl: "",
+    primaryColor: "",
     status: true,
   },
 });
 
-const [name, nameAttrs] = defineField('name');
-const [slug, slugAttrs] = defineField('slug');
-const [whatsapp, whatsappAttrs] = defineField('whatsapp');
-const [instagram, instagramAttrs] = defineField('instagram');
-const [status, statusAttrs] = defineField('status');
+const [name, nameAttrs] = defineField("name");
+const [slug, slugAttrs] = defineField("slug");
+const [whatsapp, whatsappAttrs] = defineField("whatsapp");
+const [instagram, instagramAttrs] = defineField("instagram");
+const [status, statusAttrs] = defineField("status");
 
 const onSubmit = handleSubmit(
   async (value) => {
     const companyToCreate = {
       ...value,
-      whatsapp: `${value.whatsapp.replace(/\s/g, '')}`,
+      whatsapp: `${value.whatsapp.replace(/\s/g, "")}`,
     };
     createCompany(companyToCreate, {
       onSuccess: () => {
         resetForm();
-        toast.success('Empresa creada', {
-          position: 'top-right',
+        toast.success("Empresa creada", {
+          position: "top-right",
           description: `${companyToCreate.name} ya está disponible en la plataforma.`,
         });
         open.value = false;
       },
       onError: (error) => {
-        toast.error('No se pudo crear la empresa', {
-          position: 'top-right',
+        toast.error("No se pudo crear la empresa", {
+          position: "top-right",
           description: error.message,
         });
       },
     });
   },
   ({ errors }) => {
-    console.error('validation failed', errors);
+    console.error("validation failed", errors);
   },
 );
 </script>

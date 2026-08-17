@@ -4,27 +4,27 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/shadcn/ui/accordion';
-import BaseBadge from '@/shared/components/ui/BaseBadge.vue';
-import BaseButton from '@/shared/components/ui/BaseButton.vue';
-import BaseDatePicker from '@/shared/components/ui/BaseDatePicker.vue';
-import BaseInput from '@/shared/components/ui/BaseInput.vue';
-import BaseModal from '@/shared/components/ui/BaseModal.vue';
-import BaseToggle from '@/shared/components/ui/BaseToggle.vue';
-import { formatDate, fromNow } from '@/shared/utils/date.utils';
-import { ChevronRight, GripHorizontal, Plus, X } from '@lucide/vue';
-import { ref, watch } from 'vue';
-import { VueDraggable, type DraggableEvent } from 'vue-draggable-plus';
-import { useGetMountains } from '../queries/get-mountains.query';
-import { useGetSeasons } from '../queries/get-seasons.query';
-import type { MountainResponse } from '../types/api/response/mountain-response.type';
-import { useFieldArray, useForm } from 'vee-validate';
-import { seasonFormSchema, type SeasonFormSchema } from '../schemas/season-form.schema';
-import type { SeasonMountainFormSchema } from '../schemas/season-mountain-form.schema';
-import { toTypedSchema } from '@vee-validate/zod';
-import { useCreateSeason } from '../mutations/create-season.mutation';
-import { toast } from 'vue-sonner';
-import dayjs from 'dayjs';
+} from "@/shadcn/ui/accordion";
+import BaseBadge from "@/shared/components/ui/BaseBadge.vue";
+import BaseButton from "@/shared/components/ui/BaseButton.vue";
+import BaseDatePicker from "@/shared/components/ui/BaseDatePicker.vue";
+import BaseInput from "@/shared/components/ui/BaseInput.vue";
+import BaseModal from "@/shared/components/ui/BaseModal.vue";
+import BaseToggle from "@/shared/components/ui/BaseToggle.vue";
+import { formatDate, fromNow } from "@/shared/utils/date.utils";
+import { ChevronRight, GripHorizontal, Plus, X } from "@lucide/vue";
+import { ref, watch } from "vue";
+import { VueDraggable, type DraggableEvent } from "vue-draggable-plus";
+import { useGetMountains } from "../queries/get-mountains.query";
+import { useGetSeasons } from "../queries/get-seasons.query";
+import type { MountainResponse } from "../types/api/response/mountain-response.type";
+import { useFieldArray, useForm } from "vee-validate";
+import { seasonFormSchema, type SeasonFormSchema } from "../schemas/season-form.schema";
+import type { SeasonMountainFormSchema } from "../schemas/season-mountain-form.schema";
+import { toTypedSchema } from "@vee-validate/zod";
+import { useCreateSeason } from "../mutations/create-season.mutation";
+import { toast } from "vue-sonner";
+import dayjs from "dayjs";
 
 const { data } = useGetSeasons();
 const { data: mountains } = useGetMountains();
@@ -36,9 +36,9 @@ const { mutate: createSeason, isPending } = useCreateSeason();
 const { handleSubmit, defineField, errors, resetForm } = useForm<SeasonFormSchema>({
   validationSchema: toTypedSchema(seasonFormSchema),
   initialValues: {
-    companyId: '00000000-0000-0000-0000-000000000001',
-    name: '',
-    year: '' as unknown as number,
+    companyId: "00000000-0000-0000-0000-000000000001",
+    name: "",
+    year: "" as unknown as number,
     startDate: undefined as unknown as Date,
     endDate: undefined as unknown as Date,
     isCurrent: true,
@@ -46,24 +46,24 @@ const { handleSubmit, defineField, errors, resetForm } = useForm<SeasonFormSchem
   },
 });
 
-const [name, nameAttrs] = defineField('name');
-const [startDate, startDateAttrs] = defineField('startDate');
-const [endDate, endDateAttrs] = defineField('endDate');
-const [isCurrent, isCurrentAttrs] = defineField('isCurrent');
+const [name, nameAttrs] = defineField("name");
+const [startDate, startDateAttrs] = defineField("startDate");
+const [endDate, endDateAttrs] = defineField("endDate");
+const [isCurrent, isCurrentAttrs] = defineField("isCurrent");
 
-const { fields, push, remove, move } = useFieldArray<SeasonMountainFormSchema>('mountains');
+const { fields, push, remove, move } = useFieldArray<SeasonMountainFormSchema>("mountains");
 
 const mountainName = (mountainId: number) =>
-  mountains.value?.find((m) => Number(m.id) === mountainId)?.name ?? '';
+  mountains.value?.find((m) => Number(m.id) === mountainId)?.name ?? "";
 
 const parsePrice = (value?: string): number => {
   if (!value) return undefined as unknown as number;
-  return Number(value.replace(/\./g, '').replace(',', '.'));
+  return Number(value.replace(/\./g, "").replace(",", "."));
 };
 
 const touchedMountainRows = ref(new Set<number>());
 const touchMountainRow = (index: number) => touchedMountainRows.value.add(index);
-const mountainRowError = (index: number, path: 'price' | 'startDate') =>
+const mountainRowError = (index: number, path: "price" | "startDate") =>
   touchedMountainRows.value.has(index) ? errors.value[`mountains[${index}].${path}`] : undefined;
 
 const onSave = () => {
@@ -85,15 +85,15 @@ const onSubmit = handleSubmit(
       onSuccess: () => {
         resetForm();
         cloneMountains.value = mountains.value ? [...mountains.value] : [];
-        toast.success('Temporada creada', {
-          position: 'top-right',
+        toast.success("Temporada creada", {
+          position: "top-right",
           description: `${seasonToCreate.name} ya está disponible en la plataforma.`,
         });
         open.value = false;
       },
       onError: (error) => {
-        toast.error('No se pudo crear la temporada', {
-          position: 'top-right',
+        toast.error("No se pudo crear la temporada", {
+          position: "top-right",
           description: error.message,
         });
       },
@@ -101,7 +101,7 @@ const onSubmit = handleSubmit(
   },
   ({ errors }) => {
     fields.value.forEach((_, index) => touchMountainRow(index));
-    console.error('validation failed', errors);
+    console.error("validation failed", errors);
   },
 );
 
@@ -159,7 +159,12 @@ watch(
       <BaseModal
         title="Nueva temporada"
         :open="open"
-        @close="open = false"
+        @close="
+          () => {
+            resetForm();
+            open = false;
+          }
+        "
         class-container="max-w-120"
       >
         <div class="flex flex-col w-full gap-y-4">
@@ -366,8 +371,8 @@ watch(
                   />
                   <span class="text-[0.79rem] font-semibold">{{ mountain.name }}</span>
                   <span class="text-xs text-muted-foreground"
-                    >{{ formatDate(mountain.startDate, 'D MMM') }} -
-                    {{ formatDate(mountain.endDate, 'D MMM') }}</span
+                    >{{ formatDate(mountain.startDate, "D MMM") }} -
+                    {{ formatDate(mountain.endDate, "D MMM") }}</span
                   >
                 </div>
                 <span class="text-[0.79rem] font-bold">${{ mountain.price }}</span>
