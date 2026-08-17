@@ -3,6 +3,7 @@ export interface MountainRequest {
   name: string;
   altitudeMeters: number;
   location: string;
+  reference?: string;
   latitude?: number;
   longitude?: number;
   generalDescription?: string;
