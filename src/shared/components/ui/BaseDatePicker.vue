@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { Button } from '@/shadcn/ui/button';
-import { Calendar } from '@/shadcn/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shadcn/ui/popover';
-import { cn } from '@/shadcn/utils';
-import type { DateValue } from '@internationalized/date';
-import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
+import { Button } from "@/shadcn/ui/button";
+import { Calendar } from "@/shadcn/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
+import { cn } from "@/shadcn/utils";
+import type { DateValue } from "@internationalized/date";
+import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 
-import { CalendarIcon } from '@lucide/vue';
-import dayjs from 'dayjs';
-import { computed, type HTMLAttributes } from 'vue';
+import { CalendarIcon } from "@lucide/vue";
+import dayjs from "dayjs";
+import { computed, type HTMLAttributes } from "vue";
 
 interface Props {
   label?: string;
@@ -19,11 +19,11 @@ interface Props {
   format?: string;
   minDate?: Date;
   maxDate?: Date;
-  class?: HTMLAttributes['class'];
+  class?: HTMLAttributes["class"];
 }
 const props = withDefaults(defineProps<Props>(), {
-  placeholder: 'dd/mm/yyyy',
-  format: 'DD/MM/YY',
+  placeholder: "dd/mm/yyyy",
+  format: "DD/MM/YY",
 });
 
 const modelValue = defineModel<Date>();
@@ -48,7 +48,14 @@ const maxValue = computed(() => toCalendarDate(props.maxDate));
 
 <template>
   <div :class="cn('w-full flex flex-col gap-y-1.5', props.class)">
-    <label v-if="label" class="uppercase font-bold text-xs"
+    <label
+      v-if="label"
+      :class="[
+        'uppercase font-bold text-xs',
+        {
+          'text-destructive': error,
+        },
+      ]"
       >{{ label }} <span v-if="required" class="text-destructive"> * </span></label
     >
     <Popover v-slot="{ close }">
@@ -59,6 +66,9 @@ const maxValue = computed(() => toCalendarDate(props.maxDate));
             cn(
               'justify-between text-left font-normal border bg-white',
               !date && 'text-muted-foreground',
+              {
+                'border-destructive': error,
+              },
             )
           "
         >
