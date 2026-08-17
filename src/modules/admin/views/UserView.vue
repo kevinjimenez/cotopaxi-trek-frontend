@@ -72,7 +72,7 @@ const moveMountain = (id: number, from: Ref<Mountain[]>, to: Ref<Mountain[]>) =>
 const addMountain = (id: number) => moveMountain(id, cloneMountains, newMountains);
 const removeMountain = (id: number) => moveMountain(id, newMountains, cloneMountains);
 
-const activeSeason = (item: UserResponse) => item.userSeasons.find((e) => e.status);
+const activeSeason = (item: UserResponse) => item.userSeasons.find((e) => e.enrolled);
 
 const onSave = () => {
   onSubmit();
@@ -352,7 +352,7 @@ watch(
                   :key="idx"
                   :class="[
                     'text-[0.68rem] font-bold',
-                    i.status ? 'bg-primary text-white' : 'bg-primary/10 text-primary',
+                    i.enrolled ? 'bg-primary text-white' : 'bg-primary/10 text-primary',
                   ]"
                   :label="i.season.name"
                 />
