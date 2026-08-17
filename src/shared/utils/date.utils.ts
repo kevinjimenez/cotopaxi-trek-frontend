@@ -17,7 +17,7 @@ dayjs.extend(relativeTime, {
 });
 dayjs.locale('es');
 
-export const formatDate = (value: string | Date, format: string = 'YYYY-MM-DD') => {
+export const formatDate = (value: string | Date | undefined, format: string = 'YYYY-MM-DD') => {
   if (!value) return '';
 
   const parsed = dayjs(value);

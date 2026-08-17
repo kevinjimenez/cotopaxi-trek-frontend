@@ -100,7 +100,7 @@ const onSubmit = handleSubmit(
   },
 );
 
-const addMountain = (id: string) => {
+const addMountain = (id: number) => {
   const mountain = cloneMountains.value.find((m) => m.id === id);
   if (!mountain) return;
   push({
