@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { cn } from '@/shadcn/utils';
-import BaseButton from '@/shared/components/ui/BaseButton.vue';
-import BaseDivider from '@/shared/components/ui/BaseDivider.vue';
-import { useRoute, useRouter } from 'vue-router';
+import { cn } from "@/shadcn/utils";
+import BaseButton from "@/shared/components/ui/BaseButton.vue";
+import BaseDivider from "@/shared/components/ui/BaseDivider.vue";
+import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
@@ -15,8 +15,8 @@ const goTo = (name: string) => {
 
 const navLinkClass = (name: string) =>
   cn(
-    'underline-offset-12 decoration-primary hover:underline hover:decoration-2',
-    route.name === name ? 'text-foreground underline decoration-2' : 'text-foreground',
+    "underline-offset-12 decoration-primary hover:underline hover:decoration-2",
+    route.name === name ? "text-foreground underline decoration-2" : "text-foreground",
   );
 </script>
 
@@ -33,7 +33,17 @@ const navLinkClass = (name: string) =>
             <span class="text-foreground text-xs font-semibold">Admin</span>
           </div>
 
-          <BaseButton class="border bg-white" label="Cerrar sesión" size="sm" variant="secondary" />
+          <BaseButton
+            class="border bg-white"
+            label="Cerrar sesión"
+            size="sm"
+            variant="secondary"
+            @click="
+              () => {
+                router.replace({ name: 'login' });
+              }
+            "
+          />
         </div>
       </div>
       <BaseDivider />

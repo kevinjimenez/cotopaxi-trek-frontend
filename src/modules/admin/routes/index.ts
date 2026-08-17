@@ -1,44 +1,45 @@
-import type { RouteRecordRaw } from 'vue-router';
-import AdminLayout from '../layouts/AdminLayout.vue';
+import type { RouteRecordRaw } from "vue-router";
+import AdminLayout from "../layouts/AdminLayout.vue";
 
 export const adminRoutes: RouteRecordRaw = {
-  path: '/admin',
-  name: 'admin',
+  path: "/admin",
+  name: "admin",
+  redirect: { name: "user" },
   component: AdminLayout,
   children: [
     {
-      path: 'company',
-      name: 'company',
-      component: () => import('@/modules/admin/views/CompanyView.vue'),
+      path: "company",
+      name: "company",
+      component: () => import("@/modules/admin/views/CompanyView.vue"),
       meta: {
-        title: 'Empresa',
+        title: "Empresa",
         requiresAuth: false,
       },
     },
     {
-      path: 'season',
-      name: 'season',
-      component: () => import('@/modules/admin/views/SeasonView.vue'),
+      path: "season",
+      name: "season",
+      component: () => import("@/modules/admin/views/SeasonView.vue"),
       meta: {
-        title: 'Temporadas',
+        title: "Temporadas",
         requiresAuth: false,
       },
     },
     {
-      path: 'mountain',
-      name: 'mountain',
-      component: () => import('@/modules/admin/views/MountainView.vue'),
+      path: "mountain",
+      name: "mountain",
+      component: () => import("@/modules/admin/views/MountainView.vue"),
       meta: {
-        title: 'Montañas',
+        title: "Montañas",
         requiresAuth: false,
       },
     },
     {
-      path: 'user',
-      name: 'user',
-      component: () => import('@/modules/admin/views/UserView.vue'),
+      path: "user",
+      name: "user",
+      component: () => import("@/modules/admin/views/UserView.vue"),
       meta: {
-        title: 'Usuarios',
+        title: "Usuarios",
         requiresAuth: false,
       },
     },
