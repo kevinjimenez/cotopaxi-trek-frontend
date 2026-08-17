@@ -15,7 +15,7 @@ const CREATE_USER_MUTATION = `
       status
       userSeasons {
         id
-        status
+        enrolled
         season {
           id
           name

@@ -14,7 +14,7 @@ const GET_USERS_QUERY = `
           status
           userSeasons {
               id
-              status
+              enrolled
               season {
                   id
                   name

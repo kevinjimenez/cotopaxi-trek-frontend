@@ -2,9 +2,9 @@
 import BaseBadge from "@/shared/components/ui/BaseBadge.vue";
 import BaseButton from "@/shared/components/ui/BaseButton.vue";
 import BaseDivider from "@/shared/components/ui/BaseDivider.vue";
-import { Plus } from "@lucide/vue";
 import { ref } from "vue";
 import CreateMountainModal from "../components/CreateMountainModal.vue";
+import HeaderMountainView from "../components/HeaderMountainView.vue";
 import { useGetMountains } from "../queries/get-mountains.query";
 
 const { data: mountains } = useGetMountains();
@@ -18,22 +18,8 @@ const openModal = () => {
 
 <template>
   <section class="px-10 py-8">
-    <section class="flex flex-row justify-between items-center">
-      <div class="flex flex-col">
-        <h4 class="text-xl font-bold">Montañas</h4>
-        <p class="text-sm text-muted-foreground">
-          Catalago de Company, independiente de las temporadas
-        </p>
-      </div>
-      <BaseButton
-        class="text-[0.8rem]"
-        label="Nueva montaña"
-        :prefix-icon="Plus"
-        icon-class="size-2.5"
-        @click="openModal()"
-      />
-      <CreateMountainModal :open="open" @close="open = false" />
-    </section>
+    <HeaderMountainView @open-modal="openModal" />
+    <CreateMountainModal :open="open" @close="open = false" />
 
     <div class="border w-full rounded-lg flex flex-col mt-5 bg-white">
       <div

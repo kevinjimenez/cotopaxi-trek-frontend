@@ -14,6 +14,6 @@ export interface UserResponse {
 
 export interface UserSeason {
   id: number;
-  status: boolean;
+  enrolled: boolean;
   season: SeasonResponse;
 }
