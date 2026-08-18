@@ -1,8 +1,8 @@
 import { ref, watch, type Ref } from "vue";
-import type { MountainResponse } from "../types/api/response/mountain-response.type";
-import type { useSeasonForm } from "./use-season-form";
 import type { DraggableEvent } from "vue-draggable-plus";
 import type { SeasonMountainFormSchema } from "../schemas/season-mountain-form.schema";
+import type { MountainResponse } from "../types/api/response/mountain-response.type";
+import type { useSeasonForm } from "./use-season-form";
 
 export const useSeasonMountains = (
   mountains: Ref<MountainResponse[] | undefined>,
@@ -39,10 +39,20 @@ export const useSeasonMountains = (
 
   watch(
     mountains,
-    (newMountains) => {
+    (newMountains, oldMountains) => {
+      console.log({ newMountains, oldMountains });
       if (newMountains) cloneMountains.value = [...newMountains];
     },
     { immediate: true },
+  );
+
+  watch(
+    cloneMountains,
+    (newCloneMountains, oldCloneMountains) => {
+      console.log({ newCloneMountains, oldCloneMountains });
+      // if (newMountains) cloneMountains.value = [...newMountains];
+    },
+    // { immediate: true },
   );
 
   return {

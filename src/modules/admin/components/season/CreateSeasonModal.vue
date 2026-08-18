@@ -75,7 +75,10 @@ const onSave = () => {
 watch(
   () => props.open,
   (isOpen) => {
-    if (isOpen) resetForm();
+    if (isOpen) {
+      resetForm();
+      cloneMountains.value = mountains.value ? [...mountains.value] : [];
+    }
   },
 );
 </script>
@@ -129,7 +132,10 @@ watch(
         <span class="text-[0.7rem] uppercase text-muted-foreground font-semibold"
           >disponibles - toca para agregar</span
         >
-        <div class="flex flex-wrap gap-2">
+        <span v-if="!cloneMountains.length" class="text-xs text-muted-foreground italic"
+          >Ya no dispones de montañas disponibles para agregar.</span
+        >
+        <div v-else class="flex flex-wrap gap-2">
           <AvailableMountainChip
             v-for="mountain in cloneMountains"
             :key="mountain.id"
@@ -143,7 +149,12 @@ watch(
         <span class="text-[0.7rem] uppercase text-muted-foreground font-semibold"
           >orden de ascenso - arrastra para reordenar</span
         >
-        <div class="flex flex-col gap-y-2">
+        <span
+          v-if="!mountainsFieldArray.fields.value.length"
+          class="text-xs text-muted-foreground italic"
+          >Aún no has agregado montañas a esta temporada.</span
+        >
+        <div v-else class="flex flex-col gap-y-2">
           <VueDraggable :model-value="mountainsFieldArray.fields.value" @update="reorderMountain">
             <div v-for="(field, index) in mountainsFieldArray.fields.value" :key="field.key">
               <RowEnrolledMountain
