@@ -2,6 +2,8 @@ import { useFieldArray, useForm } from "vee-validate";
 import { seasonFormSchema, type SeasonFormSchema } from "../schemas/season-form.schema";
 import { toTypedSchema } from "@vee-validate/zod";
 import type { SeasonMountainFormSchema } from "../schemas/season-mountain-form.schema";
+import type { SeasonRequest } from "../types/api/request/season-request.type";
+import dayjs from "dayjs";
 
 export const useSeasonForm = () => {
   const { handleSubmit, defineField, errors, resetForm } = useForm<SeasonFormSchema>({
@@ -23,6 +25,17 @@ export const useSeasonForm = () => {
   const [isCurrent, isCurrentAttrs] = defineField("isCurrent");
 
   const mountainsFieldArray = useFieldArray<SeasonMountainFormSchema>("mountains");
+
+  const buildPayload = (value: SeasonFormSchema): SeasonRequest => ({
+    ...value,
+    year: dayjs(value.startDate).year(),
+    mountains: value.mountains.map((mountain, index) => ({
+      ...mountain,
+      sortOrder: index + 1,
+      endDate: mountain.startDate,
+    })),
+  });
+
   return {
     name,
     startDate,
@@ -35,6 +48,7 @@ export const useSeasonForm = () => {
     mountainsFieldArray,
 
     errors,
+    buildPayload,
     resetForm,
     handleSubmit,
   };
