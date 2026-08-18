@@ -26,8 +26,7 @@ const emit = defineEmits<{
 }>();
 
 const { success, error } = useToast();
-// mountains solo las activas
-const { data: mountains } = useGetMountains();
+const { data: mountains } = useGetMountains({ status: true });
 const { mutate: createSeason, isPending } = useCreateSeason();
 const {
   endDate,
