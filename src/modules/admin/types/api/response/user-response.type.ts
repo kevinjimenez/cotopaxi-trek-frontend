@@ -1,19 +1,16 @@
-import type { BookingResponse } from './booking-response.type';
-import type { SeasonResponse } from './season-response.type';
+import type { BookingResponse } from "./booking-response.type";
+import type { UserSeasonResponse } from "./user-season-response.type";
 
 export interface UserResponse {
   id: string;
+  companyId?: string;
   name: string;
   lastname: string;
-  username: string;
-  phone: string;
+  username?: string;
+  email?: string;
+  phone?: string;
+  role: "customer" | "admin" | "superadmin";
   status: boolean;
-  userSeasons: UserSeason[];
+  userSeasons: UserSeasonResponse[];
   bookings: BookingResponse[];
-}
-
-export interface UserSeason {
-  id: number;
-  enrolled: boolean;
-  season: SeasonResponse;
 }

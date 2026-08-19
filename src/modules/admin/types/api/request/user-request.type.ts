@@ -1,4 +1,4 @@
-import type { BookingRequest } from './booking-request.type';
+import type { BookingRequest } from "./booking-request.type";
 
 export interface UserRequest {
   companyId: string;
@@ -8,8 +8,8 @@ export interface UserRequest {
   username?: string;
   email?: string;
   phone?: string;
-  role?: 'customer' | 'admin' | 'superadmin';
+  role?: "customer" | "admin" | "superadmin";
   status?: boolean;
   password: string;
-  bookings?: BookingRequest[];
+  bookings: BookingRequest[];
 }

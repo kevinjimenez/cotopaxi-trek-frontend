@@ -39,20 +39,10 @@ export const useSeasonMountains = (
 
   watch(
     mountains,
-    (newMountains, oldMountains) => {
-      console.log({ newMountains, oldMountains });
+    (newMountains) => {
       if (newMountains) cloneMountains.value = [...newMountains];
     },
     { immediate: true },
-  );
-
-  watch(
-    cloneMountains,
-    (newCloneMountains, oldCloneMountains) => {
-      console.log({ newCloneMountains, oldCloneMountains });
-      // if (newMountains) cloneMountains.value = [...newMountains];
-    },
-    // { immediate: true },
   );
 
   return {
