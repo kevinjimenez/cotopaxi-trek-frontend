@@ -1,5 +1,5 @@
 export interface MountainResponse {
-  id: string;
+  id: number;
   name: string;
   location: string;
   reference?: string;

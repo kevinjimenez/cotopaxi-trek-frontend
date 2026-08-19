@@ -7,4 +7,7 @@ export interface CompanyResponse {
   logoUrl?: string | null;
   primaryColor?: string | null;
   status?: boolean | null;
+  // users?: User[];
+  // seasons?: Season[];
+  // mountains?: Mountain[];
 }

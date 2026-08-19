@@ -9,8 +9,8 @@ import BaseTextarea from "@/shared/components/ui/BaseTextarea.vue";
 import BaseToggle from "@/shared/components/ui/BaseToggle.vue";
 import { useToast } from "@/shared/composables/use-toast";
 import { ref, watch } from "vue";
-import { useMountainForm } from "../composables/use-mountain-form";
-import { useCreateMountain } from "../mutations/create-mountain.mutation";
+import { useMountainForm } from "../../composables/use-mountain-form";
+import { useCreateMountain } from "../../mutations/create-mountain.mutation";
 
 interface Props {
   open: boolean;
@@ -49,17 +49,6 @@ const {
 
 const logoFile = ref<File>();
 
-watch(
-  () => props.open,
-  (isOpen) => {
-    if (isOpen) resetForm();
-  },
-);
-
-const onSave = () => {
-  onSubmit();
-};
-
 const onSubmit = handleSubmit(
   async (value) => {
     const mountainToCreate = buildPayload(value);
@@ -76,6 +65,17 @@ const onSubmit = handleSubmit(
   },
   ({ errors }) => {
     console.error("validation failed", errors);
+  },
+);
+
+const onSave = () => {
+  onSubmit();
+};
+
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (isOpen) resetForm();
   },
 );
 </script>

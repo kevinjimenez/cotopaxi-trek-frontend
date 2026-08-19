@@ -4,7 +4,7 @@ import type { SeasonRequest } from "../types/api/request/season-request.type";
 import type { SeasonResponse } from "../types/api/response/season-response.type";
 import { seasonKeys } from "../queries/keys/season.query-key";
 
-const CREATE_SEASONUSER_MUTATION = `
+const CREATE_SEASON_MUTATION = `
   mutation CreateSeason($input: CreateSeasonInput!) {
     createSeason(createSeasonInput: $input) {
       id
@@ -14,24 +14,13 @@ const CREATE_SEASONUSER_MUTATION = `
       startDate
       endDate
       isCurrent
-      seasonMountains {
-        id
-        sortOrder
-        price
-        startDate
-        endDate
-        mountain {
-          id
-          name
-        }
-      }
     }
   }
 
 `;
 
 const createSeason = async (input: SeasonRequest) => {
-  const { createSeason } = await gql<{ createSeason: SeasonResponse }>(CREATE_SEASONUSER_MUTATION, {
+  const { createSeason } = await gql<{ createSeason: SeasonResponse }>(CREATE_SEASON_MUTATION, {
     input,
   });
   return createSeason;

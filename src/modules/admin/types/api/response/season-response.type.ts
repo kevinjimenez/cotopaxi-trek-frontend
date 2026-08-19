@@ -1,8 +1,8 @@
-import type { SeasonMountainResponse } from './season-mountain-response.type';
+import type { SeasonMountainResponse } from "./season-mountain-response.type";
 
 export interface SeasonResponse {
   id: number;
-  companyId: string;
+  companyId?: string;
   name: string;
   year: number;
   startDate: Date;
