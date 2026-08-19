@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Progress from "@/shadcn/ui/progress/Progress.vue";
 import BaseBadge from "@/shared/components/ui/BaseBadge.vue";
+import BaseProgress from "@/shared/components/ui/BaseProgress.vue";
 import { formatDate } from "@/shared/utils/date.utils";
 import { CircleCheck, Plus } from "@lucide/vue";
-import { toRef, watch } from "vue";
+import { computed, toRef, watch } from "vue";
 import { useMountain } from "../../composables/use-mountain";
 import type { Mountain } from "../../types/mountain.type";
 import type { Season } from "../../types/season.type";
@@ -21,6 +21,10 @@ const { cloneMountains, addMountain, removeMountain } = useMountain(
   toRef(() => props.season),
   newMountains,
 );
+
+const progress = computed(() => {
+  return (newMountains.value.length * 100) / (props.season?.mountains.length ?? 1);
+});
 
 watch(
   () => props.open,
@@ -46,11 +50,7 @@ watch(
           {{ newMountains.length }} de {{ season?.mountains.length }} montañas contratadas
         </span>
       </div>
-      <!-- pasarolo a base -->
-      <Progress
-        :model-value="(newMountains.length * 100) / (season?.mountains.length ?? 1)"
-        class="w-full"
-      />
+      <BaseProgress :value="progress" />
     </div>
 
     <!-- tomar -->
