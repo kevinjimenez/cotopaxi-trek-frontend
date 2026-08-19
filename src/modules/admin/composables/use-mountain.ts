@@ -2,9 +2,11 @@ import { ref, watch, type Ref } from "vue";
 import type { Mountain } from "../types/mountain.type";
 import type { Season } from "../types/season.type";
 
-export const useMountain = (season: Ref<Season | undefined>) => {
+export const useMountain = (
+  season: Ref<Season | undefined>,
+  newMountains: Ref<Mountain[]> = ref<Mountain[]>([]),
+) => {
   const cloneMountains = ref<Mountain[]>([]);
-  const newMountains = ref<Mountain[]>([]);
 
   const moveMountain = (id: number, from: Ref<Mountain[]>, to: Ref<Mountain[]>) => {
     const mountain = from.value.find((m) => m.id === id);
