@@ -34,7 +34,7 @@ const openModal = () => {
         <BaseButton label="Agregar montaña" :prefix-icon="Plus" icon-class="size-3" />
       </div>
 
-      <div class="border w-full rounded-lg flex flex-col mt-5 bg-white">
+      <div class="border w-full rounded-lg flex flex-col mt-5 bg-white" v-else>
         <RowMountain
           v-for="(mountain, index) in mountains"
           :index="index"
