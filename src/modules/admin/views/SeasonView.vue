@@ -34,7 +34,7 @@ const openModal = () => {
         </span>
         <BaseButton label="Agregar temporada" :prefix-icon="Plus" icon-class="size-3" />
       </div>
-      <BaseAccordion class="mt-5">
+      <BaseAccordion class="mt-5" v-else>
         <RowSeason v-for="season in seasons" :key="season.id" :season="season" />
       </BaseAccordion>
     </div>
