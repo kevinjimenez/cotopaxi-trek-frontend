@@ -7,6 +7,7 @@
         <h3 class="text-primary text-2xl font-bold">Iniciar sesión</h3>
         <section class="flex flex-col gap-y-4 items-center justify-center">
           <BaseInput
+            required
             custom-class-input="h-10"
             label="Usuario"
             placeholder="Ingrese tu usuario"
@@ -18,6 +19,7 @@
           />
 
           <BaseInput
+            required
             type="password"
             custom-class-input="h-10"
             label="Contraseña"
@@ -29,7 +31,13 @@
             :error="errors.password"
           />
 
-          <BaseButton label="Iniciar sesión" class="w-full" size="lg" @click="onEnter" />
+          <BaseButton
+            label="Iniciar sesión"
+            class="w-full"
+            size="lg"
+            @click="onEnter"
+            :loading="isPending"
+          />
 
           <span class="text-xs text-muted-foreground"
             >Acceso restringido a personal autorizado.</span
@@ -52,14 +60,18 @@
 <script setup lang="ts">
 import BaseButton from "@/shared/components/ui/BaseButton.vue";
 import BaseInput from "@/shared/components/ui/BaseInput.vue";
+import { useToast } from "@/shared/composables/use-toast";
 import { Lock, User } from "@lucide/vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
-import { useRouter } from "vue-router";
-import { loginFormSchema, type LoginFormSchema } from "../schemas/login-form.schema";
 import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useLogin } from "../mutations/login.mutation";
+import { loginFormSchema, type LoginFormSchema } from "../schemas/login-form.schema";
 
 const router = useRouter();
+const { mutate: login, isPending } = useLogin();
+const { success, error } = useToast();
 
 const { handleSubmit, defineField, errors, resetForm } = useForm<LoginFormSchema>({
   validationSchema: toTypedSchema(loginFormSchema),
@@ -83,7 +95,23 @@ const [password, passwordAttrs] = defineField("password");
 const onSubmit = handleSubmit(
   async (value) => {
     console.log({ value });
-    router.push({ name: "user" });
+
+    login(
+      {
+        username: value.username,
+        password: value.password,
+      },
+      {
+        onSuccess: () => {
+          resetForm();
+          success("Success", `ingreso ok`);
+          router.push({ name: "user" });
+        },
+        onError: (err) => {
+          error("No se pudo ingresar", err.message);
+        },
+      },
+    );
   },
   ({ errors }) => {
     console.error("validation failed", errors);
