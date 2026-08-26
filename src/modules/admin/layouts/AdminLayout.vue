@@ -2,10 +2,12 @@
 import { cn } from "@/shadcn/utils";
 import BaseButton from "@/shared/components/ui/BaseButton.vue";
 import BaseDivider from "@/shared/components/ui/BaseDivider.vue";
+import { useAuthStore } from "@/shared/stores/auth.store";
 import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 
 const goTo = (name: string) => {
   router.push({
@@ -18,6 +20,11 @@ const navLinkClass = (name: string) =>
     "underline-offset-12 decoration-primary hover:underline hover:decoration-2",
     route.name === name ? "text-foreground underline decoration-2" : "text-foreground",
   );
+
+const logout = () => {
+  authStore.clearAccessToken();
+  router.replace({ name: "login" });
+};
 </script>
 
 <template>
@@ -38,11 +45,7 @@ const navLinkClass = (name: string) =>
             label="Cerrar sesión"
             size="sm"
             variant="secondary"
-            @click="
-              () => {
-                router.replace({ name: 'login' });
-              }
-            "
+            @click="logout"
           />
         </div>
       </div>

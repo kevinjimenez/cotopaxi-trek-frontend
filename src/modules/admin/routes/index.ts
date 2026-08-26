@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/shared/stores/auth.store.ts";
 import type { RouteRecordRaw } from "vue-router";
 import AdminLayout from "../layouts/AdminLayout.vue";
 
@@ -15,6 +16,12 @@ export const adminRoutes: RouteRecordRaw = {
         title: "Empresa",
         requiresAuth: false,
       },
+      beforeEnter: () => {
+        const authStore = useAuthStore();
+
+        if (!authStore.isAuthenticated) return { name: "login" };
+        if (authStore.role !== "superadmin") return { name: "user" };
+      },
     },
     {
       path: "season",
@@ -23,6 +30,10 @@ export const adminRoutes: RouteRecordRaw = {
       meta: {
         title: "Temporadas",
         requiresAuth: false,
+      },
+      beforeEnter: () => {
+        const authStore = useAuthStore();
+        if (!authStore.isAuthenticated) return { name: "login" };
       },
     },
     {
@@ -33,6 +44,10 @@ export const adminRoutes: RouteRecordRaw = {
         title: "Montañas",
         requiresAuth: false,
       },
+      beforeEnter: () => {
+        const authStore = useAuthStore();
+        if (!authStore.isAuthenticated) return { name: "login" };
+      },
     },
     {
       path: "user",
@@ -41,6 +56,10 @@ export const adminRoutes: RouteRecordRaw = {
       meta: {
         title: "Usuarios",
         requiresAuth: false,
+      },
+      beforeEnter: () => {
+        const authStore = useAuthStore();
+        if (!authStore.isAuthenticated) return { name: "login" };
       },
     },
   ],
