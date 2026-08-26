@@ -1,21 +1,40 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { ACCESS_TOKEN_COOKIE, getCookie, removeCookie, setCookie } from "../utils/cookie.utils";
+import { ADMIN_COOKIE_KEYS } from "../constants/cookie.constants";
+import { STORE_KEY } from "../constants/store.constants";
+import { getCookie, removeCookie, setCookie } from "../utils/cookie.utils";
+import { decodeToken, isTokenExpired } from "../utils/jwt.utils";
 
-export const useAuthStore = defineStore("auth", () => {
-  const accessToken = ref<string | null>(getCookie(ACCESS_TOKEN_COOKIE) ?? null);
+export const useAuthStore = defineStore(STORE_KEY.AUTH, () => {
+  const cookieAccessToken = getCookie(ADMIN_COOKIE_KEYS.ACCESS_TOKEN) ?? null;
+  const accessToken = ref<string | null>(cookieAccessToken);
 
-  const isAuthenticated = computed(() => !!accessToken.value);
+  const payload = computed(() => (accessToken.value ? decodeToken(accessToken.value) : null));
+
+  const isAuthenticated = computed(() => !!payload.value && !isTokenExpired(payload.value));
+
+  const role = computed(() => payload.value?.role ?? null);
+  const companyId = computed(() => payload.value?.companyId ?? null);
+  const userId = computed(() => payload.value?.sub ?? null);
 
   const setAccessToken = (token: string) => {
     accessToken.value = token;
-    setCookie(ACCESS_TOKEN_COOKIE, token);
+    setCookie(ADMIN_COOKIE_KEYS.ACCESS_TOKEN, token);
   };
 
   const clearAccessToken = () => {
     accessToken.value = null;
-    removeCookie(ACCESS_TOKEN_COOKIE);
+    removeCookie(ADMIN_COOKIE_KEYS.ACCESS_TOKEN);
   };
 
-  return { accessToken, isAuthenticated, setAccessToken, clearAccessToken };
+  return {
+    accessToken,
+    payload,
+    isAuthenticated,
+    role,
+    companyId,
+    userId,
+    setAccessToken,
+    clearAccessToken,
+  };
 });

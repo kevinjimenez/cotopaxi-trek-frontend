@@ -9,11 +9,9 @@ const LOGIN_MUTATION = `
   login(loginInput: $loginInput) {
     accessToken
     user {
-      id
       name
       lastname
       username
-      role
     }
   }
 }
