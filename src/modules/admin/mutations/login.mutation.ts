@@ -1,4 +1,5 @@
 import { gql } from "@/shared/services/graphql";
+import { useAuthStore } from "@/shared/stores/auth.store";
 import { useMutation } from "@tanstack/vue-query";
 import type { LoginRequest } from "../types/api/request/login-request.type";
 import type { LoginResponse } from "../types/api/response/login-response.type";
@@ -26,16 +27,12 @@ const login = async (loginInput: LoginRequest) => {
 };
 
 export const useLogin = () => {
-  // const queryClient = useQueryClient();
+  const authStore = useAuthStore();
 
   return useMutation({
     mutationFn: login,
-    onSuccess: async (res) => {
-      console.log({ res });
-      // queryClient.setQueryData<UserResponse[]>(userKeys.all, (old) =>
-      //   old ? [...old, newUser] : [newUser],
-      // );
-      // await queryClient.invalidateQueries({ queryKey: userKeys.all });
+    onSuccess: (res) => {
+      authStore.setAccessToken(res.accessToken);
     },
   });
 };
