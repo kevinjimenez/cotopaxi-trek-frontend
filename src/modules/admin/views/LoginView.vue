@@ -70,7 +70,7 @@ import { useLogin } from "../mutations/login.mutation";
 import { loginFormSchema, type LoginFormSchema } from "../schemas/login-form.schema";
 
 const router = useRouter();
-const { mutate: login, isPending } = useLogin();
+const { mutate: login, isPending, data } = useLogin();
 const { success, error } = useToast();
 
 const { handleSubmit, defineField, errors, resetForm } = useForm<LoginFormSchema>({
@@ -105,6 +105,7 @@ const onSubmit = handleSubmit(
         onSuccess: () => {
           resetForm();
           success("Success", `ingreso ok`);
+          console.log({ data: data.value });
           router.push({ name: "user" });
         },
         onError: (err) => {
