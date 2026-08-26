@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const loginFormSchema = z.object({
-  username: z.string().min(1, "need").optional(),
+  username: z.string().min(1, "need"),
   password: z.string().min(1, "si necesito"),
 });
 

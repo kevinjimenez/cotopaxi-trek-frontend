@@ -1,4 +1,4 @@
-import { apiService } from './api.service';
+import { apiService } from "./api.service";
 
 interface GqlResponse<T> {
   data: T | null;
@@ -9,12 +9,12 @@ export const gql = async <T>(
   query: string,
   variables: Record<string, unknown> = {},
 ): Promise<T> => {
-  const { data: body } = await apiService.post<GqlResponse<T>>('/graphql', {
+  const { data: body } = await apiService.post<GqlResponse<T>>("/graphql", {
     query,
     variables,
   });
 
-  if (body.errors?.length) throw new Error(body.errors.map((e) => e.message).join(' | '));
+  if (body.errors?.length) throw new Error(body.errors.map((e) => e.message).join(" | "));
 
   return body.data as T;
 };
