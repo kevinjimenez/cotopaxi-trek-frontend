@@ -14,7 +14,6 @@ export const adminRoutes: RouteRecordRaw = {
       component: () => import("@/modules/admin/views/CompanyView.vue"),
       meta: {
         title: "Empresa",
-        requiresAuth: false,
       },
       beforeEnter: () => {
         const authStore = useAuthStore();
@@ -29,7 +28,6 @@ export const adminRoutes: RouteRecordRaw = {
       component: () => import("@/modules/admin/views/SeasonView.vue"),
       meta: {
         title: "Temporadas",
-        requiresAuth: false,
       },
       beforeEnter: () => {
         const authStore = useAuthStore();
@@ -42,7 +40,6 @@ export const adminRoutes: RouteRecordRaw = {
       component: () => import("@/modules/admin/views/MountainView.vue"),
       meta: {
         title: "Montañas",
-        requiresAuth: false,
       },
       beforeEnter: () => {
         const authStore = useAuthStore();
@@ -55,7 +52,6 @@ export const adminRoutes: RouteRecordRaw = {
       component: () => import("@/modules/admin/views/UserView.vue"),
       meta: {
         title: "Usuarios",
-        requiresAuth: false,
       },
       beforeEnter: () => {
         const authStore = useAuthStore();

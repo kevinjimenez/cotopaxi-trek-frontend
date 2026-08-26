@@ -18,4 +18,8 @@ const router = createRouter({
   ],
 });
 
+router.afterEach((to) => {
+  document.title = to.meta.title ? `${to.meta.title} · Panel Admin` : "Panel Admin";
+});
+
 export default router;
