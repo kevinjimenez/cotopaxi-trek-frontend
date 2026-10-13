@@ -28,6 +28,7 @@ export const useUserForm = (season: Ref<Season | undefined>, newMountains: Ref<M
   const [lastname, lastnameAttrs] = defineField("lastname");
   const [email, emailAttrs] = defineField("email");
   const [phone, phoneAttrs] = defineField("phone");
+  const [role, roleAttrs] = defineField("role");
   const [username, usernameAttrs] = defineField("username");
   const [password, passwordAttrs] = defineField("password");
   const [status, statusAttrs] = defineField("status");
@@ -49,12 +50,14 @@ export const useUserForm = (season: Ref<Season | undefined>, newMountains: Ref<M
     lastname,
     email,
     phone,
+    role,
     username,
     password,
     status,
     nameAttrs,
     lastnameAttrs,
     emailAttrs,
+    roleAttrs,
     phoneAttrs,
     usernameAttrs,
     passwordAttrs,

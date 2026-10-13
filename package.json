@@ -16,7 +16,7 @@
     "format": "oxfmt src/"
   },
   "dependencies": {
-    "@lucide/vue": "^1.31.0",
+    "@lucide/vue": "^1.38.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/vue-query": "^5.101.4",
     "@vee-validate/zod": "^4.15.1",
@@ -31,7 +31,7 @@
     "leaflet": "^1.9.4",
     "maska": "^3.2.0",
     "pinia": "^4.0.2",
-    "reka-ui": "^2.10.3",
+    "reka-ui": "^2.10.4",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
     "vee-validate": "4.15.1",

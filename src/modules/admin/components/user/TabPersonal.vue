@@ -3,12 +3,15 @@ import BaseInput from "@/shared/components/ui/BaseInput.vue";
 import BaseToggle from "@/shared/components/ui/BaseToggle.vue";
 import type { BaseFieldProps, FormErrors, GenericObject } from "vee-validate";
 import type { UserFormSchema } from "../../schemas/user-form.schema";
+import RadioGroup from "@/shadcn/ui/radio-group/RadioGroup.vue";
+import RadioGroupItem from "@/shadcn/ui/radio-group/RadioGroupItem.vue";
 
 interface Props {
   nameAttrs: BaseFieldProps & GenericObject;
   lastnameAttrs: BaseFieldProps & GenericObject;
   emailAttrs: BaseFieldProps & GenericObject;
   phoneAttrs: BaseFieldProps & GenericObject;
+  roleAttrs: BaseFieldProps & GenericObject;
   usernameAttrs: BaseFieldProps & GenericObject;
   passwordAttrs: BaseFieldProps & GenericObject;
   statusAttrs: BaseFieldProps & GenericObject;
@@ -21,6 +24,7 @@ const name = defineModel<string>("name");
 const lastname = defineModel<string>("lastname");
 const email = defineModel<string>("email");
 const phone = defineModel<string>("phone");
+const role = defineModel<string>("role");
 const username = defineModel<string>("username");
 const password = defineModel<string>("password");
 const status = defineModel<boolean>("status");
@@ -64,6 +68,27 @@ const status = defineModel<boolean>("status");
         :error="errors.phone"
         mask="+593 ### ### ###"
       />
+    </div>
+    <div class="flex flex-col w-full justify-center">
+      <RadioGroup default-value="comfortable">
+        <div class="flex space-x-2 border p-2 rounded-xl bg-yellow-200">
+          <RadioGroupItem id="r1" value="default" class="bg-blue-200" />
+          <span class="bg-green-200">
+            <label class="text-sm font-medium">Cliente</label>
+            <p class="p-0 m-0 text-xs text-muted-foreground">
+              Excepteur sit consectetur consectetur laborum.
+            </p>
+          </span>
+        </div>
+        <div class="flex items-center space-x-2 bg-red-200">
+          <RadioGroupItem id="r2" value="comfortable" />
+          <Label for="r2">Comfortable</Label>
+        </div>
+        <div class="flex items-center space-x-2 bg-red-200">
+          <RadioGroupItem id="r3" value="compact" />
+          <Label for="r3">Compact</Label>
+        </div>
+      </RadioGroup>
     </div>
     <div class="flex flex-col gap-y-4">
       <span class="uppercase text-xs text-muted-foreground font-semibold">Cuenta de acceso</span>
